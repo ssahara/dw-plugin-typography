@@ -1,5 +1,6 @@
 DokuWiki plugin Typography
 =============================
+Extended version from original [Typography plugin](http://treecode.pl/typography.html) developed by Paweł Piekarski.
 
 Sometimes there is need for nice looking slogan, quotation or article paragraph. For full control you need full control over font displaing as CSS can give. Typography plugin extends DokuWiki markup by typesetting abilities. It brings all font related directives from CSS as wiki syntax.
 
