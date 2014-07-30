@@ -35,7 +35,7 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
         );
 
         $this->conds = array(
-            'ff' => '/^[a-zA-Z0-9\ ,]{2,}[a-zA-Z0-9]$/',
+            'ff' => '/^((\'[^,]+?\'|[^ ,]+?) *,? *)+$/',
             'fc' => '/(^\#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$)|'
                    .'(^rgb\((\d{1,3}%?,){2}\d{1,3}%?\)$)|'
                    .'(^[a-zA-Z]+$)/',

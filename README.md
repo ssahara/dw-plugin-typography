@@ -16,7 +16,7 @@ Syntax
 
 | functionality  | parameter syntax | comment |
 |:--             |:--               |:--      |
-|font family     | `<typo ff:Coma separated, font famliy names, can contain spaces;>`Text`</typo>` |  |
+|font family     | `<typo ff:Coma separated, font names, 'Single quatation required for those contains spaces';>`Text`</typo>` |  |
 |font variant    | `<typo fv:smallcaps;>`Text`</typo>` | only "smallcaps" value allowed |
 |font size       | `<typo fs:20px;>`Text`</typo>` | values below zero not allowed |
 |line height     | `<typo lh:20px;>`Text`</typo>` | values below zero not allowed |
