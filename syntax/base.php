@@ -27,6 +27,7 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
             'fc' => 'color:',
             'bg' => 'background-color:',
             'fs' => 'font-size:',
+            'fw' => 'font-weight:',
             'lh' => 'line-height:',
             'ls' => 'letter-spacing:',
             'ws' => 'word-spacing:',
@@ -45,12 +46,13 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
                    .'(^[a-zA-Z]+$)/',
             'fs' => '/(^\d+(?:\.\d+)?(px|em|ex|pt|%))$|'
                    .'^(xx-small|x-small|small|medium|large|x-large|xx-large|smaller|larger)$/',
+            'fw' => '/^(normal|bold|bolder|lighter|\d00)$/',
             'lh' => '/^\d+(?:\.\d+)?(px|em|ex|pt|%)?$/',
             'ls' => '/^-?\d+(?:\.\d+)?(px|em|ex|pt|%)$/',
             'ws' => '/^-?\d+(?:\.\d+)?(px|em|ex|pt|%)$/',
             'va' => '/^-?\d+(?:\.\d+)?(px|em|ex|pt|%)$|'
                    .'^(baseline|sub|super|top|text-top|middle|bottom|text-bottom|inherit)$/',
-            'fv' => '/^small-?caps$/',
+            'fv' => '/^(normal|small-?caps)$/',
         );
     }
 
