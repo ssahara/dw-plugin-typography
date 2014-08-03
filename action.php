@@ -96,8 +96,8 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
      */
     public function fontFamilyToolbar(Doku_Event &$event, $param) {
         $options = array(
-            'serif'       => 'selif',
-            'sans-serif'  => 'sans-selif',
+            'serif'       => 'serif',
+            'sans-serif'  => 'sans-serif',
             //'cursive'     => 'cursive',
             //'fantasy'     => 'fantasy',
         );
