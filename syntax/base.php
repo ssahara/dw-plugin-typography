@@ -50,7 +50,7 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
             'ws' => '/^-?\d+(?:\.\d+)?(px|em|ex|pt|%)$/',
             'va' => '/^-?\d+(?:\.\d+)?(px|em|ex|pt|%)$|'
                    .'^(baseline|sub|super|top|text-top|middle|bottom|text-bottom|inherit)$/',
-            'fv' => '/^smallcaps$/',
+            'fv' => '/^small-?caps$/',
         );
     }
 
