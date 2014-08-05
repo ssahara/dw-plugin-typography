@@ -2,6 +2,6 @@ base  typography
 name  Typography plugin
 author Paweł Piekarski
 email  <qentinson@gmail.com>
-date   2014-07-29
+date   2014-08-05
 desc   Empower dokuwiki with html typographic abilities.
-url    http://treecode.pl/typography.html
+url    https://www.dokuwiki.org/plugin:typography
