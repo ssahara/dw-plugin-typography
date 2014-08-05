@@ -28,11 +28,12 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
             'bg' => 'background-color:',
             'fs' => 'font-size:',
             'fw' => 'font-weight:',
+            'fv' => 'font-variant:',
             'lh' => 'line-height:',
             'ls' => 'letter-spacing:',
             'ws' => 'word-spacing:',
             'va' => 'vertical-align:',
-            'fv' => 'font-variant:',
+            'sp' => 'white-space:',
         );
 
         $this->conds = array(
@@ -47,12 +48,13 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
             'fs' => '/(^\d+(?:\.\d+)?(px|em|ex|pt|%))$|'
                    .'^(xx-small|x-small|small|medium|large|x-large|xx-large|smaller|larger)$/',
             'fw' => '/^(normal|bold|bolder|lighter|\d00)$/',
+            'fv' => '/^(normal|small-?caps)$/',
             'lh' => '/^\d+(?:\.\d+)?(px|em|ex|pt|%)?$/',
             'ls' => '/^-?\d+(?:\.\d+)?(px|em|ex|pt|%)$/',
             'ws' => '/^-?\d+(?:\.\d+)?(px|em|ex|pt|%)$/',
             'va' => '/^-?\d+(?:\.\d+)?(px|em|ex|pt|%)$|'
                    .'^(baseline|sub|super|top|text-top|middle|bottom|text-bottom|inherit)$/',
-            'fv' => '/^(normal|small-?caps)$/',
+            'sp' => '/^(normal|nowrap|pre|pre-line|pre-wrap)$/',
         );
     }
 
@@ -67,7 +69,7 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
 
     // Connect pattern to lexer
     public function connectTo($mode) {
-        $this->Lexer->addEntryPattern($this->entry_pattern, $mode,$this->pluginMode);
+        $this->Lexer->addEntryPattern($this->entry_pattern, $mode, $this->pluginMode);
     }
     public function postConnect() {
         $this->Lexer->addExitPattern($this->exit_pattern, $this->pluginMode);
@@ -76,7 +78,7 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
     /*
      * Handle the match
      */
-    public function handle($match, $state, $pos, Doku_Handler &$handler) {
+    public function handle($match, $state, $pos, Doku_Handler $handler) {
         switch($state) {
             case DOKU_LEXER_ENTER:
                 $markup = substr($this->exit_pattern, 2, -1);
@@ -111,7 +113,7 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
     /*
      * Create output
      */
-    public function render($format, Doku_Renderer &$renderer, $data) {
+    public function render($format, Doku_Renderer $renderer, $data) {
         if ($format != 'xhtml') return false;
 
         list($state, $match) = $data;

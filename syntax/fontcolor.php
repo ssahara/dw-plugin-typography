@@ -19,7 +19,7 @@ class syntax_plugin_typography_fontcolor extends syntax_plugin_typography_base {
     // Connect pattern to lexer
     public function connectTo($mode) {
         if (plugin_isdisabled('fontcolor')) {
-            $this->Lexer->addEntryPattern($this->entry_pattern, $mode,$this->pluginMode);
+            $this->Lexer->addEntryPattern($this->entry_pattern, $mode, $this->pluginMode);
         }
     }
 
