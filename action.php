@@ -74,14 +74,14 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
         $button = array(
                 'type'  => 'picker',
                 'title' => $this->getLang('fc_picker'),
-                'icon'  => '../../plugins/typography/images/fontcolor/picker.png',
+                'icon'  => DOKU_BASE.'lib/plugins/typography/images/fontcolor/picker.png',
                 'list'  => array()
         );
         foreach ($colors as $colorName => $colorValue) {
             $button['list'][] = array(
                 'type'  => 'format',
                 'title' => $colorName,
-                'icon'  => '../../plugins/typography/images/fontcolor/color-icon.php?color='
+                'icon'  => DOKU_BASE.'lib/plugins/typography/images/fontcolor/color-icon.php?color='
                            .substr($colorValue, 1),
                 'open'  => '<fc ' . $colorValue . '>',
                 'close' => '</fc>'
@@ -104,7 +104,7 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
         $button = array(
                 'type' => 'picker',
                 'title' => $this->getLang('ff_picker'),
-                'icon' => '../../plugins/typography/images/fontfamily/picker.png',
+                'icon' => DOKU_BASE.'lib/plugins/typography/images/fontfamily/picker.png',
                 'list' => array()
         );
         foreach ($options as $familyName => $familyValue) {
@@ -112,7 +112,7 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
                 'type'  => 'format',
                 'title'  => $this->getLang('ff_'.$familyName),
                 'sample' => $this->getLang('ff_'.$familyName.'_sample'),
-                'icon'   => '../../plugins/typography/images/fontfamily/'.$familyName.'.png',
+                'icon'   => DOKU_BASE.'lib/plugins/typography/images/fontfamily/'.$familyName.'.png',
                 'open'   => '<ff '.$familyValue.'>',
                 'close'  => '</ff>',
             );
@@ -147,7 +147,7 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
                 'type'  => 'format',
                 'title'  => $this->getLang('fs_'.$sizeName),
                 'sample' => $this->getLang('fs_'.$sizeName.'_sample'),
-                'icon'   => '../../plugins/typography/images/fontsize/'.$sizeName.'.png',
+                'icon'   => DOKU_BASE.'lib/plugins/typography/images/fontsize/'.$sizeName.'.png',
                 'open'   => '<fs '.$sizeValue.'>',
                 'close'  => '</fs>',
             );
