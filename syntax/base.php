@@ -134,7 +134,7 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
                     $renderer->doc .= '<span style="'.$css.'">';
                     break;
                 case DOKU_LEXER_UNMATCHED:
-                    $renderer->doc .= $renderer->_xmlEntities($match);
+                    $renderer->doc .= $renderer->_xmlEntities($data);
                     break;
                 case DOKU_LEXER_EXIT:
                     $renderer->doc .= '</span>';
