@@ -92,17 +92,17 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
                 }
                 //msg('markup:'.$markup.' tokens='.var_export($tokens, true), 0);
 
-                $css = '';
+                $attrs = array();
                 foreach($tokens as $token) {
                     if (empty($token)) continue;
                     list($type, $val) = explode(':', trim($token));
                     if (!array_key_exists($type, $this->props)) continue;
                     if (preg_match($this->conds[$type], $val)) {
                         if ($val == 'smallcaps') { $val = 'small-caps'; }
-                        $css .= $this->props[$type].$val.'; ';
+                        $attrs = array_merge($attrs, array($type => $val));
                     }
                 }
-                return array($state, $css);
+                return array($state, $attrs);
                 break;
             case DOKU_LEXER_UNMATCHED: return array($state, $match);
             case DOKU_LEXER_EXIT:      return array($state, '');
@@ -113,13 +113,17 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
     /*
      * Create output
      */
-    public function render($format, Doku_Renderer $renderer, $data) {
+    public function render($format, Doku_Renderer $renderer, $indata) {
 
         if ($format == 'xhtml') {
-            list($state, $match) = $data;
+            list($state, $data) = $indata;
             switch ($state) {
                 case DOKU_LEXER_ENTER:
-                    $renderer->doc .= '<span style="'.$match.'">';
+                    $css = '';
+                    foreach ($data as $type => $val) {
+                        $css .= $this->props[$type].$val.'; ';
+                    }
+                    $renderer->doc .= '<span style="'.$css.'">';
                     break;
                 case DOKU_LEXER_UNMATCHED:
                     $renderer->doc .= $renderer->_xmlEntities($match);
