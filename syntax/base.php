@@ -114,20 +114,28 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
      * Create output
      */
     public function render($format, Doku_Renderer $renderer, $data) {
-        if ($format != 'xhtml') return false;
 
-        list($state, $match) = $data;
-        switch ($state) {
-            case DOKU_LEXER_ENTER:
-                $renderer->doc .= '<span style="'.$match.'">';
-                break;
-            case DOKU_LEXER_UNMATCHED:
-                $renderer->doc .= $renderer->_xmlEntities($match);
-                break;
-            case DOKU_LEXER_EXIT:
-                $renderer->doc .= '</span>';
-                break;
+        if ($format == 'xhtml') {
+            list($state, $match) = $data;
+            switch ($state) {
+                case DOKU_LEXER_ENTER:
+                    $renderer->doc .= '<span style="'.$match.'">';
+                    break;
+                case DOKU_LEXER_UNMATCHED:
+                    $renderer->doc .= $renderer->_xmlEntities($match);
+                    break;
+                case DOKU_LEXER_EXIT:
+                    $renderer->doc .= '</span>';
+                    break;
+            }
+            return true;
+        } else if ($format == 'odt') {
+            /*
+             * ODT support; call separate function odt_render($renderer, $indata);
+             */
+            //$this->odt_render($renderer, $indata);
+            //return true;
         }
-        return true;
+        return false;
     }
 }
