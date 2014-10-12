@@ -18,6 +18,10 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
     protected $exit_pattern  = '</typo>';
 
     protected $pluginMode, $props, $cond;
+    
+    // ODT (Open Document format) support
+    //protected $closing_stack = NULL;
+    //protected $odt_style_count = 0;
 
     public function __construct() {
         $this->pluginMode = substr(get_class($this), 7); // drop 'syntax_' from class name
@@ -56,6 +60,10 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
                    .'^(baseline|sub|super|top|text-top|middle|bottom|text-bottom|inherit)$/',
             'sp' => '/^(normal|nowrap|pre|pre-line|pre-wrap)$/',
         );
+
+        //if (!plugin_isdisabled('odt')) {
+        //    $this->closing_stack = new SplStack(); //require PHP 5 >= 5.3.0
+        //}
     }
 
     public function getType() { return 'formatting'; }
@@ -142,4 +150,14 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
         }
         return false;
     }
+
+    /**
+     * odt_renderer
+     * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
+     * @author     Lars (LarsDW223)
+     */
+    //function odt_render($renderer, $indata) {
+    //    list($state, $data) = $indata;
+    //    return false;
+    //}
 }
