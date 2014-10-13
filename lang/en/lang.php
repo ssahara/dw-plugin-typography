@@ -29,4 +29,5 @@ $lang['fs_smaller']        = 'Smaller than default text';
 $lang['fs_smaller_sample'] = 'This text is smaller than default text';
 $lang['fs_larger']         = 'Larger than default text';
 $lang['fs_larger_sampel']  = 'This text is larger than default text';
+$lang['odt_too_old']       = 'Need newer ODT export plugin that supports css colorname conversion. Please install at least version 12102014. This only influences the ODT export, XHTML rendering will not be affected.';
 
