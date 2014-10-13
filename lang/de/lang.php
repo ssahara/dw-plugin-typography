@@ -1,6 +1,6 @@
 <?php
 /**
- * English language file
+ * German language file
  */
 
 // custom language strings for the plugin
@@ -29,5 +29,6 @@ $lang['fs_smaller']        = 'Kleiner als default Text';
 $lang['fs_smaller_sample'] = 'Dieser Text ist kleiner als der default Text';
 $lang['fs_larger']         = 'Größer als default Text';
 $lang['fs_larger_sampel']  = 'Dieser Text ist größer als der default Text';
+
 $lang['odt_too_old']       = 'Es wird eine neuere Version des ODT export plugin mit Unterstützung für CSS-Farbnamen-Konvertierung benötigt. Bitte installieren Sie mindestens die Version 12102014. Dies hat nur Einfluß auf den ODT-Export. Die XHTML-Darstellung wird nicht beeinflußt.';
 
