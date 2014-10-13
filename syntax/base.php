@@ -19,7 +19,7 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
 
     protected $pluginMode, $props, $cond;
     
-    // ODT (Open Document format) support
+    // ODT (Open Document Text format) export plugin support
     //protected $closing_stack = NULL;
     //protected $odt_style_count = 0;
 
@@ -143,10 +143,15 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
             return true;
         } else if ($format == 'odt') {
             /*
-             * ODT support; call separate function odt_render($renderer, $indata);
+             * ODT export; call separate function odt_render($renderer, $indata);
              */
-            //$this->odt_render($renderer, $indata);
-            //return true;
+            if (!plugin_isdisabled('odt')) {
+                $this->odt_render($renderer, $indata);
+                return true;
+            } else {
+                msg('odt plugin is not available.', -1);
+                return false;
+            }
         }
         return false;
     }
@@ -156,8 +161,9 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
      * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
      * @author     Lars (LarsDW223)
      */
-    //function odt_render($renderer, $indata) {
-    //    list($state, $data) = $indata;
-    //    return false;
-    //}
+    public function odt_render($renderer, $indata) {
+        list($state, $data) = $indata;
+        // to be implemented...
+        return false;
+    }
 }
