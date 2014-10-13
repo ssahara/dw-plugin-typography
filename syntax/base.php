@@ -227,7 +227,12 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
         return true;
     }
 
-    protected function _get_odt_params ($attrs) {
+    /**
+     * _get_odt_params
+     * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
+     * @author     Lars (LarsDW223)
+     */
+    protected function _get_odt_params($attrs) {
         $use_span = true;
         $sub_on = false;
         $super_on = false;
