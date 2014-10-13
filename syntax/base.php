@@ -67,19 +67,9 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
             $this->odt_installed = true;
             $this->closing_stack = new SplStack(); //require PHP 5 >= 5.3.0
 
-            // The CSSColors helper class is only available in the ODT plugin
-            // starting with version 12102014.
-            $odt_plugin =& plugin_load('syntax', 'odt');
-            if ($odt_plugin != NULL) {
-                $info=$odt_plugin->getInfo();
-                $date = explode('-', $info['date']);
-                $this->odt_csscolors_present = true;
-                if ($date [0] < 2014)
-                    $this->odt_csscolors_present = false;
-                if ($date [0] == 2014 && $date [1] < 10)
-                    $this->odt_csscolors_present = false;
-                if ($date [0] == 2014 && $date [1] == 10 && $date [2] < 12)
-                    $this->odt_csscolors_present = false;
+            $odt_colors = plugin_load('helper', 'odt_csscolors');
+            if ($odt_colors == NULL) {
+                msg($this->getLang('odt_too_old'));
             }
         }
     }
@@ -248,9 +238,9 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
         foreach($attrs as $type => $val) {
             if (($type == 'bg' || $type == 'fc') && strstr($val,'#') == false) {
                 // Convert the color name to it's value, if possible...
-                if ($this->odt_csscolors_present == true) {
-                    require_once (DOKU_PLUGIN.'odt/csscolors.php');
-                    $val = CSSColors::getColorValue($val);
+                $odt_colors = plugin_load('helper', 'odt_csscolors');
+                if ($odt_colors != NULL) {
+                    $val = $odt_colors->getColorValue($val);
                 } else {
                     // ODT plugin version is to old. Set a standard value.
                     if ($type == 'bg')
