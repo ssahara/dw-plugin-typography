@@ -233,6 +233,9 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
      * @author     Lars (LarsDW223)
      */
     protected function _get_odt_params($attrs) {
+        // load helper component of ODT export plugin, which convert the color name to it's value
+        $odt_colors = plugin_load('helper', 'odt_csscolors');
+
         $use_span = true;
         $sub_on = false;
         $super_on = false;
@@ -241,19 +244,6 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
         $style = '<style:style style:name="'.$style_name.'" style:family="text" style:vertical-align="auto"><style:text-properties';
         $match = false;
         foreach($attrs as $type => $val) {
-            if (($type == 'bg' || $type == 'fc') && strstr($val,'#') == false) {
-                // Convert the color name to it's value, if possible...
-                $odt_colors = plugin_load('helper', 'odt_csscolors');
-                if ($odt_colors != NULL) {
-                    $val = $odt_colors->getColorValue($val);
-                } else {
-                    // ODT plugin version is to old. Set a standard value.
-                    if ($type == 'bg')
-                        $val = '#ffffff';
-                    if ($type == 'fc')
-                        $val = '#000000';
-                }
-            }
             switch ($type) {
                 case 'ff':
                     $match = true;
@@ -261,10 +251,18 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
                     break;
                 case 'bg':
                     $match = true;
+                    if (strstr($val,'#') == false) {
+                       // Convert the color name to it's value, if possible... (default white)
+                        $val = ($odt_colors != NULL) ? $odt_colors->getColorValue($val) : '#ffffff';
+                    }
                     $style .= ' fo:background-color="'.$val.'"';
                     break;
                 case 'fc':
                     $match = true;
+                    if (strstr($val,'#') == false) {
+                       // Convert the color name to it's value, if possible... (default black)
+                        $val = ($odt_colors != NULL) ? $odt_colors->getColorValue($val) : '#000000';
+                    }
                     $style .= ' fo:color="'.$val.'"';
                     break;
                 case 'fw':
