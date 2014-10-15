@@ -66,11 +66,6 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
         if (!plugin_isdisabled('odt')) {
             $this->odt_installed = true;
             $this->closing_stack = new SplStack(); //require PHP 5 >= 5.3.0
-
-            $odt_colors = plugin_load('helper', 'odt_csscolors');
-            if ($odt_colors == NULL) {
-                msg($this->getLang('odt_too_old'));
-            }
         }
     }
 
