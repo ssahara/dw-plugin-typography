@@ -1,7 +1,7 @@
 # .gitattributes for repository
 .gitattributes	export-ignore
 .gitignore	export-ignore
-example/*       export-ignore
+example/        export-ignore
 
 # Auto detect text files and perform LF normalization
 * text=auto
