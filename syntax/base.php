@@ -20,8 +20,6 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
     protected $pluginMode, $props, $cond;
     
     // ODT (Open Document format) support
-    protected $odt_installed = false;
-    protected $odt_csscolors_present = false;
     protected $closing_stack = NULL;
     protected $odt_style_count = 0;
 
@@ -64,7 +62,6 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
         );
 
         if (!plugin_isdisabled('odt')) {
-            $this->odt_installed = true;
             $this->closing_stack = new SplStack(); //require PHP 5 >= 5.3.0
         }
     }
@@ -159,12 +156,7 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
      * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
      * @author     Lars (LarsDW223)
      */
-    function odt_render($renderer, $indata) {
-        if ($this->odt_installed == false || $this->closing_stack == NULL) {
-            // Stack not setup???
-            return (false);
-        }
-
+    protected function odt_render($renderer, $indata) {
         list($state, $data) = $indata;
         switch ($state) {
             case DOKU_LEXER_ENTER:
