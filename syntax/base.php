@@ -20,8 +20,9 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
     protected $pluginMode, $props, $cond;
     
     // ODT (Open Document format) support
-    protected $closing_stack = NULL;
-    protected $odt_style_count = 0;
+    protected $closing_stack = NULL;                     // used in odt_render()
+    protected $odt_style_prefix = 'plugin_typography_';  // used in _get_odt_params()
+    protected $odt_style_count  = 0;                     // used in _get_odt_params()
 
     public function __construct() {
         $this->pluginMode = substr(get_class($this), 7); // drop 'syntax_' from class name
@@ -226,7 +227,7 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
         $use_span = true;
         $sub_on = false;
         $super_on = false;
-        $style_name = 'plugin_typography_'.$this->odt_style_count;
+        $style_name = $this->odt_style_prefix.$this->odt_style_count;
         $this->odt_style_count++;
         $style = '<style:style style:name="'.$style_name.'" style:family="text" style:vertical-align="auto"><style:text-properties';
         $match = false;
