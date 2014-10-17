@@ -19,7 +19,7 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
 
     protected $pluginMode, $props, $cond;
     
-    // ODT (Open Document format) support
+    // ODT (Open Document format) export
     protected $closing_stack = NULL;                     // used in odt_render()
     protected $odt_style_prefix = 'plugin_typography_';  // used in _get_odt_params()
     protected $odt_style_count  = 0;                     // used in _get_odt_params()
@@ -140,7 +140,7 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
             return true;
         } else if ($format == 'odt') {
             /*
-             * ODT support; call separate function odt_render($renderer, $indata);
+             * ODT export; call separate function odt_render($renderer, $indata);
              */
             $success = $this->odt_render($renderer, $indata);
             return $success;
