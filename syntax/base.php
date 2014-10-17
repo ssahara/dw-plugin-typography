@@ -61,10 +61,6 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
                    .'^(baseline|sub|super|top|text-top|middle|bottom|text-bottom|inherit)$/',
             'sp' => '/^(normal|nowrap|pre|pre-line|pre-wrap)$/',
         );
-
-        if (!plugin_isdisabled('odt')) {
-            $this->closing_stack = new SplStack(); //require PHP 5 >= 5.3.0
-        }
     }
 
     public function getType() { return 'formatting'; }
@@ -158,6 +154,11 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
      * @author     Lars (LarsDW223)
      */
     protected function odt_render($renderer, $indata) {
+
+        if (is_null($this->closing_stack)) {
+            $this->closing_stack = new SplStack(); //require PHP 5 >= 5.3.0
+        }
+
         list($state, $data) = $indata;
         switch ($state) {
             case DOKU_LEXER_ENTER:
