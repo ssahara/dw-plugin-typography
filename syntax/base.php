@@ -163,40 +163,32 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
         switch ($state) {
             case DOKU_LEXER_ENTER:
                 list($odt_style_name, $odt_style, $odt_use_span, $odt_sub_on, $odt_super_on) = $this->_get_odt_params ($data);
-                $tags = 0;
                 if ($odt_style_name != NULL) {
                     $renderer->autostyles[$odt_style_name] = $odt_style;
                     if ($odt_use_span == false) {
                         $renderer->p_close ();
                         $renderer->p_open ($odt_style_name);
                         $this->closing_stack->push('</text:p>');
-                        $tags++;
                     } else {
                         $renderer->doc .= '<text:span text:style-name="'.$odt_style_name.'">';
                         $this->closing_stack->push('</text:span>');
-                        $tags++;
                     }
                 }
-
                 if ($odt_sub_on == true) {
                     $renderer->subscript_open();
                     $this->closing_stack->push('</text:span>');
-                    $tags++;
                 }
                 if ($odt_super_on == true) {
                     $renderer->superscript_open();
                     $this->closing_stack->push('</text:span>');
-                    $tags++;
                 }
-                $this->closing_stack->push($tags);
                 break;
             case DOKU_LEXER_UNMATCHED:
                 $renderer->doc .= $renderer->_xmlEntities($data);
                 break;
             case DOKU_LEXER_EXIT:
                 try {
-                    $tags = $this->closing_stack->pop();
-                    for ($i = 0; $i < $tags; $i++) {
+                    while ($this->closing_stack->count()) {
                         $content = $this->closing_stack->pop();
                         if ($content == '</text:p>') {
                             // For closing paragraphs use the renderer's function otherwise the internal
