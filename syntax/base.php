@@ -21,7 +21,6 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
     
     // ODT (Open Document format) export
     protected $closing_stack = NULL;                     // used in odt_render()
-    protected $odt_style_prefix = 'plugin_typography_';  // used in _get_odt_params()
     protected $odt_style_count  = 0;                     // used in _get_odt_params()
 
     public function __construct() {
@@ -220,7 +219,7 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
         $use_span = true;
         $sub_on = false;
         $super_on = false;
-        $style_name = $this->odt_style_prefix.$this->odt_style_count;
+        $style_name = $this->pluginMode.'_'.$this->odt_style_count;
         $this->odt_style_count++;
         $style = '<style:style style:name="'.$style_name.'" style:family="text" style:vertical-align="auto"><style:text-properties';
         $match = false;
@@ -234,7 +233,7 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
                     $match = true;
                     if (strstr($val,'#') == false) {
                        // Convert the color name to it's value, if possible... (default white)
-                        $val = ($odt_colors != NULL) ? $odt_colors->getColorValue($val) : '#ffffff';
+                        $val = is_null($odt_colors) ? '#ffffff' : $odt_colors->getColorValue($val);
                     }
                     $style .= ' fo:background-color="'.$val.'"';
                     break;
@@ -242,7 +241,7 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
                     $match = true;
                     if (strstr($val,'#') == false) {
                        // Convert the color name to it's value, if possible... (default black)
-                        $val = ($odt_colors != NULL) ? $odt_colors->getColorValue($val) : '#000000';
+                        $val = is_null($odt_colors) ? '#000000' : $odt_colors->getColorValue($val);
                     }
                     $style .= ' fo:color="'.$val.'"';
                     break;
