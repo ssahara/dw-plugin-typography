@@ -13,7 +13,7 @@ require_once(dirname(__FILE__).'/base.php');
 
 class syntax_plugin_typography_fontcolor extends syntax_plugin_typography_base {
 
-    protected $entry_pattern = '<fc(?: .+?)?>(?=.+?</fc>)';
+    protected $entry_pattern = '<fc\b(?: .+?)?>(?=.+?</fc>)';
     protected $exit_pattern  = '</fc>';
 
     // Connect pattern to lexer

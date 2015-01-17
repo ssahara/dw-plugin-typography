@@ -14,7 +14,7 @@ require_once(DOKU_PLUGIN.'syntax.php');
 
 class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
 
-    protected $entry_pattern = '<typo(?: .+?)?>(?=.+?</typo>)';
+    protected $entry_pattern = '<typo\b(?: .+?)?>(?=.+?</typo>)';
     protected $exit_pattern  = '</typo>';
 
     protected $pluginMode, $props, $cond;
