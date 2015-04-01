@@ -21,7 +21,6 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
     
     // ODT (Open Document format) export
     protected $closing_stack = NULL;                     // used in odt_render()
-    protected $odt_style_count  = 0;                     // used in _get_odt_params()
 
     public function __construct() {
         $this->pluginMode = substr(get_class($this), 7); // drop 'syntax_' from class name
@@ -161,25 +160,17 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
         list($state, $data) = $indata;
         switch ($state) {
             case DOKU_LEXER_ENTER:
-                list($odt_style_name, $odt_style, $odt_use_span, $odt_sub_on, $odt_super_on) = $this->_get_odt_params ($data);
-                if ($odt_style_name != NULL) {
-                    $renderer->autostyles[$odt_style_name] = $odt_style;
-                    if ($odt_use_span == false) {
-                        $renderer->p_close ();
-                        $renderer->p_open ($odt_style_name);
-                        $this->closing_stack->push('</text:p>');
-                    } else {
-                        $renderer->doc .= '<text:span text:style-name="'.$odt_style_name.'">';
-                        $this->closing_stack->push('</text:span>');
-                    }
+                $css = '';
+                foreach ($data as $type => $val) {
+                    $css .= $this->props[$type].$val.'; ';
                 }
-                if ($odt_sub_on == true) {
-                    $renderer->subscript_open();
-                    $this->closing_stack->push('</text:span>');
-                }
-                if ($odt_super_on == true) {
-                    $renderer->superscript_open();
-                    $this->closing_stack->push('</text:span>');
+                if ( empty($data ['lh']) === true ) {
+                    $renderer->_odtSpanOpenUseCSSStyle ($css);
+                    $this->closing_stack->push('span');
+                } else {
+                    $renderer->p_close ();
+                    $renderer->_odtParagraphOpenUseCSSStyle ($css);
+                    $this->closing_stack->push('p');
                 }
                 break;
             case DOKU_LEXER_UNMATCHED:
@@ -187,16 +178,15 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
                 break;
             case DOKU_LEXER_EXIT:
                 try {
-                    while ($this->closing_stack->count()) {
-                        $content = $this->closing_stack->pop();
-                        if ($content == '</text:p>') {
-                            // For closing paragraphs use the renderer's function otherwise the internal
-                            // counter in the ODT renderer is corrupted and so would be the ODT file.
-                            $renderer->p_close ();
-                            $renderer->p_open ();
-                        } else {
-                            $renderer->doc .= $content;
-                        }
+                    $content = $this->closing_stack->pop();
+                    if ($content == 'p') {
+                        // For closing paragraphs use the renderer's function otherwise the internal
+                        // counter in the ODT renderer is corrupted and so would be the ODT file.
+                        $renderer->p_close ();
+                        $renderer->p_open ();
+                    } else {
+                        // Close the span.
+                        $renderer->_odtSpanClose ();
                     }
                 } catch (Exception $e) {
                     // May be included for debugging purposes.
@@ -205,112 +195,5 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
                 break;
         }
         return true;
-    }
-
-    /**
-     * _get_odt_params
-     * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
-     * @author     Lars (LarsDW223)
-     */
-    protected function _get_odt_params($attrs) {
-        // load helper component of ODT export plugin, which convert the color name to it's value
-        $odt_colors = plugin_load('helper', 'odt_csscolors');
-
-        $use_span = true;
-        $sub_on = false;
-        $super_on = false;
-        $style_name = $this->pluginMode.'_'.$this->odt_style_count;
-        $this->odt_style_count++;
-        $style = '<style:style style:name="'.$style_name.'" style:family="text" style:vertical-align="auto"><style:text-properties';
-        $match = false;
-        foreach($attrs as $type => $val) {
-            switch ($type) {
-                case 'ff':
-                    $match = true;
-                    $style .= ' fo:font-family="'.$val.'"';
-                    break;
-                case 'bg':
-                    $match = true;
-                    if (strstr($val,'#') == false) {
-                       // Convert the color name to it's value, if possible... (default white)
-                        $val = is_null($odt_colors) ? '#ffffff' : $odt_colors->getColorValue($val);
-                    }
-                    $style .= ' fo:background-color="'.$val.'"';
-                    break;
-                case 'fc':
-                    $match = true;
-                    if (strstr($val,'#') == false) {
-                       // Convert the color name to it's value, if possible... (default black)
-                        $val = is_null($odt_colors) ? '#000000' : $odt_colors->getColorValue($val);
-                    }
-                    $style .= ' fo:color="'.$val.'"';
-                    break;
-                case 'fw':
-                    $match = true;
-                    $style .= ' fo:font-weight="'.$val.'"';
-                    break;
-                case 'fs':
-                    // This will currently not work because font-size does not work in autostyles.
-                    $match = true;
-                    $style .= ' fo:font-size="'.$val.'"';
-                    break;
-                case 'fv':
-                    $match = true;
-                    $style .= ' fo:font-variant="'.$val.'"';
-                    break;
-                case 'lh':
-                    // Line-Height in ODT only works with pharagraphs. Switch off span.
-                    $match = true;
-                    $use_span = false;
-                    $style .= ' fo:line-height="400%"';
-                    break;
-                case 'ls':
-                    // Not all CSS units are supported by ODT!
-                    $match = true;
-                    $style .= ' fo:letter-spacing="'.$val.'"';
-                    break;
-                case 'ws':
-                    // Not supported by ODT!
-                    break;
-                case 'sp':
-                    // Not supported right now!
-                    break;
-                case 'va':
-                    // Vertical alignment: ODT only supports top, middle, bottom and auto...
-                    if ( $val == 'top' || $val == 'middle' || $val == 'bottom' || $val == 'auto' ) {
-                        $match = true;
-                        $style = str_replace('style:vertical-align="auto"', 'style:vertical-align="'.$val.'"', $style);
-                    }
-
-                    // ...but the ODT renderer has build-in styles for sub and super.
-                    if ($val == 'sub') {
-                        $sub_on = true;
-                        $super_on = false;
-                    }
-                    if ($val == 'super') {
-                        $sub_on = false;
-                        $super_on = true;
-                    }
-                    break;
-            }
-        }
-
-        if ($match == true) {
-            // If the style still includes 'style:vertical-align="auto"' then we can delete it
-            // for brevity because it is the default.
-            $style = str_replace('style:vertical-align="auto"', '', $style);
-
-            $style .= '/></style:style>';
-            if ($use_span == false) {
-                // If we use a paragraph, then the style family has to be paragraph.
-                $style = str_replace('style:family="text"', 'style:family="paragraph"', $style);
-                $style = str_replace('style:text-properties', 'style:paragraph-properties', $style);
-            }
-        } else {
-            // Nothing matched for ODT style. Clear it. Prevents empty styles.
-            $style = NULL;
-            $style_name = NULL;
-        }
-        return array ($style_name, $style, $use_span, $sub_on, $super_on);
     }
 }
