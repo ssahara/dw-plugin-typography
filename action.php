@@ -41,36 +41,41 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
      * Adds FontColor toolbar button
      * @see https://www.dokuwiki.org/plugin:fontcolor
      */
-    public function fontColorToolbar(Doku_Event &$event, $param) {
-        $colors = array(
-            'Yellow' => '#ffff00',
-            'Red' => '#ff0000',
-            'Orange' => '#ffa500',
-            'Salmon' => '#fa8072',
-            'Pink' => '#ffc0cb',
-            'Plum' => '#dda0dd',
-            'Purple' => '#800080',
-            'Fuchsia' => '#ff00ff',
-            'Silver' => '#c0c0c0',
-            'Aqua' => '#00ffff',
-            'Teal' => '#008080',
-            'Cornflower' => '#6495ed',
-            'Sky Blue' => '#87ceeb',
-            'Aquamarine' => '#7fffd4',
-            'Pale Green' => '#98fb98',
-            'Lime' => '#00ff00',
-            'Green' => '#008000',
-            'Olive' => '#808000',
-            'Indian Red' => '#cd5c5c',
-            'Khaki' => '#f0e68c',
-            'Powder Blue' => '#b0e0e6',
-            'Sandy Brown' => '#f4a460',
-            'Steel Blue' => '#4682b4',
-            'Thistle' => '#d8bfd8',
-            'Yellow Green' => '#9acd32',
-            'Dark Violet' => '#9400d3',
-            'Maroon' => '#800000'
+    public function fontColorToolbar(Doku_Event $event, $param) {
+        $palettePath = array(
+            'user'    => DOKU_PLUGIN.$this->getPluginName().'/palette.user.conf',
+            'default' => DOKU_PLUGIN.$this->getPluginName().'/palette.conf',
+            'local'   => DOKU_PLUGIN.$this->getPluginName().'/palette.local.conf',
         );
+        $colors = array();
+        foreach ($palettePath as $type => $file) {
+            if ($type == 'user') {
+                $colors = $this->_loadConfig($file);
+                if ($colors) break;
+            } else {
+                $colors = array_merge($colors, $this->_loadConfig($file));
+            }
+        }
+        if (empty($colors)) {
+            $colors = array( // Basic 16 colors
+              'black'   => '#000000',
+              'gray'    => '#808080',
+              'silver'  => '#c0c0c0',
+              'white'   => '#ffffff',
+              'blue'    => '#0000ff',
+              'navy'    => '#000080',
+              'teal'    => '#008080',
+              'green'   => '#008000',
+              'lime'    => '#00ff00',
+              'aqua'    => '#00ffff',
+              'yellow'  => '#ffff00',
+              'red'     => '#ff0000',
+              'fuchsia' => '#ff00ff',
+              'olive'   => '#808000',
+              'purple'  => '#800080',
+              'maroon'  => '#800000',
+            );
+        }
         $button = array(
                 'type'  => 'picker',
                 'title' => $this->getLang('fc_picker'),
@@ -94,7 +99,7 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
      * Adds FontFamily toolbar button
      * @see https://www.dokuwiki.org/plugin:fontcfamily
      */
-    public function fontFamilyToolbar(Doku_Event &$event, $param) {
+    public function fontFamilyToolbar(Doku_Event $event, $param) {
         $options = array(
             'serif'       => 'serif',
             'sans-serif'  => 'sans-serif',
@@ -124,7 +129,7 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
      * Adds FontSize toolbar button
      * @see https://www.dokuwiki.org/plugin:fontsize2
      */
-    public function fontSizeToolbar(Doku_Event &$event, $param) {
+    public function fontSizeToolbar(Doku_Event $event, $param) {
         $options = array(
             'xxs'     => 'xx-small',
             'xs'      =>  'x-small',
@@ -155,4 +160,22 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
         $event->data[] = $button;
     }
 
+    /**
+     * read two colums type config file (data, description)
+     */
+    protected function _loadConfig($file) {
+        $conf = array();
+        if (!file_exists($file)) return $conf;
+
+        $lines = @file($file);
+        if (!$lines) return false;
+        foreach ($lines as $line) {
+            $line = preg_replace('@(^//|\s//).*$@','', $line); // one-line comment
+            $line = trim($line);
+            if (empty($line)) continue;
+            $token = preg_split('/(?!,)\s+/', $line, 2);
+            $conf[trim($token[1])] = trim($token[0]);
+        }
+        return $conf;
+    }
 }
