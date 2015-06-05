@@ -18,9 +18,6 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
     protected $exit_pattern  = '</typo>';
 
     protected $pluginMode, $props, $cond;
-    
-    // ODT (Open Document format) export
-    protected $closing_stack = NULL;                     // used in odt_render()
 
     public function __construct() {
         $this->pluginMode = substr(get_class($this), 7); // drop 'syntax_' from class name
@@ -117,83 +114,37 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
      * Create output
      */
     public function render($format, Doku_Renderer $renderer, $indata) {
-
-        if ($format == 'xhtml') {
-            list($state, $data) = $indata;
-            switch ($state) {
-                case DOKU_LEXER_ENTER:
-                    $css = '';
-                    foreach ($data as $type => $val) {
-                        $css .= $this->props[$type].$val.'; ';
-                    }
-                    $renderer->doc .= '<span style="'.$css.'">';
-                    break;
-                case DOKU_LEXER_UNMATCHED:
-                    $renderer->doc .= $renderer->_xmlEntities($data);
-                    break;
-                case DOKU_LEXER_EXIT:
-                    $renderer->doc .= '</span>';
-                    break;
-            }
-            return true;
-        } else if ($format == 'odt') {
-            /*
-             * ODT export; call separate function odt_render($renderer, $indata);
-             */
-            $success = $this->odt_render($renderer, $indata);
-            return $success;
+        if (empty($indata)) return false;
+        switch ($format) {
+            case 'xhtml':
+                return $this->render_xhtml($renderer, $indata);
+            case 'odt':
+                // ODT export;
+                $odt = $this->loadHelper('typography_odt');
+                return $odt->odt_render($renderer, $indata);
+            default:
+                return false;
         }
-        return false;
     }
 
-    /**
-     * odt_renderer
-     * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
-     * @author     Lars (LarsDW223)
-     */
-    protected function odt_render($renderer, $indata) {
-
-        if (is_null($this->closing_stack)) {
-            $this->closing_stack = new SplStack(); //require PHP 5 >= 5.3.0
-        }
-
+    protected function render_xhtml(Doku_Renderer $renderer, $indata) {
         list($state, $data) = $indata;
         switch ($state) {
             case DOKU_LEXER_ENTER:
                 $css = '';
                 foreach ($data as $type => $val) {
-                    $css .= $this->props[$type].$val.'; ';
+                   $css .= $this->props[$type].$val.'; ';
                 }
-                if ( empty($data ['lh']) === true ) {
-                    $renderer->_odtSpanOpenUseCSSStyle ($css);
-                    $this->closing_stack->push('span');
-                } else {
-                    $renderer->p_close ();
-                    $renderer->_odtParagraphOpenUseCSSStyle ($css);
-                    $this->closing_stack->push('p');
-                }
+                $renderer->doc .= '<span style="'.$css.'">';
                 break;
             case DOKU_LEXER_UNMATCHED:
                 $renderer->doc .= $renderer->_xmlEntities($data);
                 break;
             case DOKU_LEXER_EXIT:
-                try {
-                    $content = $this->closing_stack->pop();
-                    if ($content == 'p') {
-                        // For closing paragraphs use the renderer's function otherwise the internal
-                        // counter in the ODT renderer is corrupted and so would be the ODT file.
-                        $renderer->p_close ();
-                        $renderer->p_open ();
-                    } else {
-                        // Close the span.
-                        $renderer->_odtSpanClose ();
-                    }
-                } catch (Exception $e) {
-                    // May be included for debugging purposes.
-                    //$renderer->doc .= $e->getMessage();
-                }
+                $renderer->doc .= '</span>';
                 break;
         }
         return true;
     }
+
 }
