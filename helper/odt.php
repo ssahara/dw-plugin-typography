@@ -1,6 +1,6 @@
 <?php
 /**
- * ODT plugin support - ODT (Open Document format) export
+ * ODT (Open Document format) export for Typography plugin
  * 
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Lars (LarsDW223)
@@ -26,7 +26,7 @@ class helper_plugin_typography_odt extends DokuWiki_Plugin {
             'sp' => 'white-space:',
         );
 
-    public function odt_render(Doku_Renderer $renderer, $indata) {
+    public function render(Doku_Renderer $renderer, $indata) {
         list($state, $data) = $indata;
 
         if (is_null($this->closing_stack)) {
@@ -39,7 +39,7 @@ class helper_plugin_typography_odt extends DokuWiki_Plugin {
                 foreach ($data as $type => $val) {
                     $css .= $this->props[$type].$val.'; ';
                 }
-                if ( empty($data['lh']) === true ) {
+                if (empty($data['lh'])) {
                     $renderer->_odtSpanOpenUseCSSStyle($css);
                     $this->closing_stack->push('span');
                 } else {
