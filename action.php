@@ -29,7 +29,7 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
     /**
      * Delete syntax.php which is obsoleted since multi-components syntax structure
      */
-    public function deleteObsoletedSingleClass(Doku_Event &$event) {
+    public function deleteObsoletedSingleClass(Doku_Event $event) {
         $legacyFile = dirname(__FILE__).'/syntax.php';
         if (file_exists($legacyFile)) { unlink($legacyFile); }
     }
@@ -39,7 +39,7 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
      * Adds FontColor toolbar button
      * @see https://www.dokuwiki.org/plugin:fontcolor
      */
-    public function fontColorToolbar(Doku_Event &$event, $param) {
+    public function fontColorToolbar(Doku_Event $event, $param) {
         $colors = array(
             'Yellow' => '#ffff00',
             'Red' => '#ff0000',
@@ -92,7 +92,7 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
      * Adds FontFamily toolbar button
      * @see https://www.dokuwiki.org/plugin:fontcfamily
      */
-    public function fontFamilyToolbar(Doku_Event &$event, $param) {
+    public function fontFamilyToolbar(Doku_Event $event, $param) {
         $options = array(
             'serif'       => 'serif',
             'sans-serif'  => 'sans-serif',
@@ -122,7 +122,7 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
      * Adds FontSize toolbar button
      * @see https://www.dokuwiki.org/plugin:fontsize2
      */
-    public function fontSizeToolbar(Doku_Event &$event, $param) {
+    public function fontSizeToolbar(Doku_Event $event, $param) {
         $options = array(
             'xxs'     => 'xx-small',
             'xs'      =>  'x-small',
