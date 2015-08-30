@@ -2,6 +2,6 @@ base  typography
 name  Typography plugin
 author Paweł Piekarski
 email  <qentinson@gmail.com>
-date   2015-06-05
+date   2015-08-30
 desc   Empower dokuwiki with html typographic capabilities.
 url    https://www.dokuwiki.org/plugin:typography
