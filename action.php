@@ -69,20 +69,32 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
             'Dark Violet' => '#9400d3',
             'Maroon' => '#800000'
         );
-        $button = array(
-                'type'  => 'picker',
-                'title' => $this->getLang('fc_picker'),
-                'icon'  => DOKU_BASE.'lib/plugins/typography/images/fontcolor/picker.png',
-                'list'  => array()
-        );
-        foreach ($colors as $colorName => $colorValue) {
-            $button['list'][] = array(
-                'type'  => 'format',
-                'title' => $colorName,
-                'icon'  => DOKU_BASE.'lib/plugins/typography/images/fontcolor/color-icon.php?color='
-                           .substr($colorValue, 1),
-                'open'  => '<fc ' . $colorValue . '>',
-                'close' => '</fc>'
+        if (extension_loaded('gd') && function_exists('imagecreatetruecolor')) {
+            $button = array(
+                    'type'  => 'picker',
+                    'title' => $this->getLang('fc_picker'),
+                    'icon'  => DOKU_BASE.'lib/plugins/typography/images/fontcolor/picker.png',
+                    'list'  => array()
+            );
+            foreach ($colors as $colorName => $colorValue) {
+                $button['list'][] = array(
+                    'type'  => 'format',
+                    'title' => $colorName,
+                    'icon'  => DOKU_BASE
+                               .'lib/plugins/typography/images/fontcolor/color-icon.php?color='
+                               .substr($colorValue, 1),
+                    'open'  => '<fc ' . $colorValue . '>',
+                    'close' => '</fc>'
+                );
+            }
+        } else {
+            // PHP GD library is NOT available
+            $button = array(
+                    'type'  => 'format',
+                    'title' => $this->getLang('fc_picker'),
+                    'icon'  => DOKU_BASE.'lib/plugins/typography/images/fontcolor/picker.png',
+                    'open'  => '<fc ' . $colorValue . '>',
+                    'close' => '</fc>'
             );
         }
         $event->data[] = $button;
@@ -137,7 +149,7 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
         $button = array(
                 'type' => 'picker',
                 'title' => $this->getLang('fs_picker'),
-                'icon' => '../../plugins/typography/images/fontsize/picker.png',
+                'icon' => DOKU_BASE.'lib/plugins/typography/images/fontsize/picker.png',
                 'list' => array()
         );
         foreach ($options as $sizeName => $sizeValue) {
