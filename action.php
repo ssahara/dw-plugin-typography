@@ -89,7 +89,7 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
             }
         } else {
             // PHP GD library is NOT available
-            $colorValue = '#ffffff'; // black
+            $colorValue = '#000000'; // black
             $button = array(
                     'type'  => 'format',
                     'title' => $this->getLang('fc_picker'),
