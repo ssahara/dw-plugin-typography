@@ -73,14 +73,14 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
             $button = array(
                     'type'  => 'picker',
                     'title' => $this->getLang('fc_picker'),
-                    'icon'  => DOKU_BASE.'lib/plugins/typography/images/fontcolor/picker.png',
+                    'icon'  => DOKU_REL.'lib/plugins/typography/images/fontcolor/picker.png',
                     'list'  => array()
             );
             foreach ($colors as $colorName => $colorValue) {
                 $button['list'][] = array(
                     'type'  => 'format',
                     'title' => $colorName,
-                    'icon'  => DOKU_BASE
+                    'icon'  => DOKU_REL
                                .'lib/plugins/typography/images/fontcolor/color-icon.php?color='
                                .substr($colorValue, 1),
                     'open'  => '<fc ' . $colorValue . '>',
@@ -93,7 +93,7 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
             $button = array(
                     'type'  => 'format',
                     'title' => $this->getLang('fc_picker'),
-                    'icon'  => DOKU_BASE.'lib/plugins/typography/images/fontcolor/picker.png',
+                    'icon'  => DOKU_REL.'lib/plugins/typography/images/fontcolor/picker.png',
                     'open'  => '<fc ' . $colorValue . '>',
                     'close' => '</fc>'
             );
@@ -115,7 +115,7 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
         $button = array(
                 'type' => 'picker',
                 'title' => $this->getLang('ff_picker'),
-                'icon' => DOKU_BASE.'lib/plugins/typography/images/fontfamily/picker.png',
+                'icon' => DOKU_REL.'lib/plugins/typography/images/fontfamily/picker.png',
                 'list' => array()
         );
         foreach ($options as $familyName => $familyValue) {
@@ -123,7 +123,7 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
                 'type'  => 'format',
                 'title'  => $this->getLang('ff_'.$familyName),
                 'sample' => $this->getLang('ff_'.$familyName.'_sample'),
-                'icon'   => DOKU_BASE.'lib/plugins/typography/images/fontfamily/'.$familyName.'.png',
+                'icon'   => DOKU_REL.'lib/plugins/typography/images/fontfamily/'.$familyName.'.png',
                 'open'   => '<ff '.$familyValue.'>',
                 'close'  => '</ff>',
             );
@@ -150,7 +150,7 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
         $button = array(
                 'type' => 'picker',
                 'title' => $this->getLang('fs_picker'),
-                'icon' => DOKU_BASE.'lib/plugins/typography/images/fontsize/picker.png',
+                'icon' => DOKU_REL.'lib/plugins/typography/images/fontsize/picker.png',
                 'list' => array()
         );
         foreach ($options as $sizeName => $sizeValue) {
@@ -158,7 +158,7 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
                 'type'  => 'format',
                 'title'  => $this->getLang('fs_'.$sizeName),
                 'sample' => $this->getLang('fs_'.$sizeName.'_sample'),
-                'icon'   => DOKU_BASE.'lib/plugins/typography/images/fontsize/'.$sizeName.'.png',
+                'icon'   => DOKU_REL.'lib/plugins/typography/images/fontsize/'.$sizeName.'.png',
                 'open'   => '<fs '.$sizeValue.'>',
                 'close'  => '</fs>',
             );
