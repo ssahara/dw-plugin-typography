@@ -20,6 +20,7 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
     public function __construct() {
         $this->pluginMode = substr(get_class($this), 7); // drop 'syntax_' from class name
 
+        // allowable parameters and relevant css properties
         $this->props = array(
             'ff' => 'font-family:',
             'fc' => 'color:',
@@ -34,6 +35,7 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
             'sp' => 'white-space:',
         );
 
+        // allowable property pattern for parameters
         $this->conds = array(
             'ff' => '/^((\'[^,]+?\'|[^ ,]+?) *,? *)+$/',
             'fc' => '/(^\#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$)|'
