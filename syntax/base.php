@@ -81,8 +81,8 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
             case DOKU_LEXER_ENTER:
                 $markup = substr($this->exit_pattern, 2, -1);
                 $params = trim(strstr(substr($match, 1, -1), ' '));
+                $attrs = array();
 
-                if ($params == false) return array($state, '');
                 $tokens = explode(';', $params);
                 if ((count($tokens) == 1) && array_key_exists($markup, $this->props)) {
                     // for inherited syntax class usage: <fs small>...</fs>
@@ -90,14 +90,13 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
                 }
                 //msg('markup:'.$markup.' tokens='.var_export($tokens, true), 0);
 
-                $attrs = array();
                 foreach($tokens as $token) {
                     if (empty($token)) continue;
                     list($type, $val) = explode(':', trim($token));
                     if (!array_key_exists($type, $this->props)) continue;
                     if (preg_match($this->conds[$type], $val)) {
                         if ($val == 'smallcaps') { $val = 'small-caps'; }
-                        $attrs = array_merge($attrs, array($type => $val));
+                        $attrs[$type] = $val;
                     }
                 }
                 return array($state, $attrs);
@@ -129,11 +128,15 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
         list($state, $data) = $indata;
         switch ($state) {
             case DOKU_LEXER_ENTER:
+                if (empty($data)) {
+                    $renderer->doc .= '<span>';
+                    break;
+                }
                 $css = '';
                 foreach ($data as $type => $val) {
                    $css .= $this->props[$type].$val.'; ';
                 }
-                $renderer->doc .= '<span style="'.$css.'">';
+                $renderer->doc .= '<span style="'.substr($css,0,-1).'">';
                 break;
             case DOKU_LEXER_UNMATCHED:
                 $renderer->doc .= $renderer->_xmlEntities($data);
