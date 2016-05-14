@@ -61,7 +61,7 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
     public function getAllowedTypes() { return array('formatting', 'substition', 'disabled'); }
     // override default accepts() method to allow nesting - ie, to get the plugin accepts its own entry syntax
     public function accepts($mode) {
-        if ($mode == substr(get_class($this), 7)) return true;
+        if ($mode == $this->pluginMode) return true;
         return parent::accepts($mode);
     }
 
