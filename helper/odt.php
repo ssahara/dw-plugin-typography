@@ -40,16 +40,24 @@ class helper_plugin_typography_odt extends DokuWiki_Plugin {
                     $css .= $this->props[$type].$val.'; ';
                 }
                 if (empty($data['lh'])) {
-                    $renderer->_odtSpanOpenUseCSSStyle($css);
+                    if (method_exists ($renderer, '_odtSpanOpenUseCSSStyle')) {
+                        $renderer->_odtSpanOpenUseCSSStyle($css);
+                    } else {
+                        $renderer->_odtSpanOpenUseCSS('span', 'style="'.$css.'"');
+                    }
                     $this->closing_stack->push('span');
                 } else {
                     $renderer->p_close();
-                    $renderer->_odtParagraphOpenUseCSSStyle($css);
+                    if (method_exists ($renderer, '_odtParagraphOpenUseCSSStyle')) {
+                        $renderer->_odtParagraphOpenUseCSSStyle($css);
+                    } else {
+                        $renderer->_odtParagraphOpenUseCSS('p', 'style="'.$css.'"');
+                    }
                     $this->closing_stack->push('p');
                 }
                 break;
             case DOKU_LEXER_UNMATCHED:
-                $renderer->doc .= $renderer->_xmlEntities($data);
+                $renderer->cdata($data);
                 break;
             case DOKU_LEXER_EXIT:
                 try {
