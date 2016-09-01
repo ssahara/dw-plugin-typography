@@ -15,10 +15,10 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
     protected $entry_pattern = '<typo\b(?: .+?)?>(?=.+?</typo>)';
     protected $exit_pattern  = '</typo>';
 
-    protected $pluginMode, $props, $cond;
+    protected $mode, $props, $cond;
 
     public function __construct() {
-        $this->pluginMode = substr(get_class($this), 7); // drop 'syntax_' from class name
+        $this->mode = substr(get_class($this), 7); // drop 'syntax_' from class name
 
         // allowable parameters and relevant css properties
         $this->props = array(
@@ -63,16 +63,16 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
     public function getAllowedTypes() { return array('formatting', 'substition', 'disabled'); }
     // override default accepts() method to allow nesting - ie, to get the plugin accepts its own entry syntax
     public function accepts($mode) {
-        if ($mode == $this->pluginMode) return true;
+        if ($mode == $this->mode) return true;
         return parent::accepts($mode);
     }
 
     // Connect pattern to lexer
     public function connectTo($mode) {
-        $this->Lexer->addEntryPattern($this->entry_pattern, $mode, $this->pluginMode);
+        $this->Lexer->addEntryPattern($this->entry_pattern, $mode, $this->mode);
     }
     public function postConnect() {
-        $this->Lexer->addExitPattern($this->exit_pattern, $this->pluginMode);
+        $this->Lexer->addExitPattern($this->exit_pattern, $this->mode);
     }
 
     /*
