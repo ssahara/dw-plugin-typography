@@ -1,6 +1,11 @@
 <?php
 error_reporting(0);
-$isSameHost = strcasecmp($_SERVER['HTTP_HOST'], parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST)) === 0;
+if (isset($_SERVER['HTTP_REFERER'])) {
+    $isSameHost = strcasecmp($_SERVER['HTTP_HOST'], parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST)) === 0;
+} else {
+    // assume same host if HTTP_REFERER is not available.
+    $isSameHost = True;
+}
 $isColorSet = array_key_exists('color', $_GET);
 if ($isSameHost && $isColorSet) {
 
