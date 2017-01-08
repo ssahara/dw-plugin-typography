@@ -13,7 +13,7 @@ require_once(dirname(__FILE__).'/base.php');
 
 class syntax_plugin_typography_fontsize extends syntax_plugin_typography_base {
 
-    protected $entry_pattern = '<fs\b(?: .+?)?>(?=.+?</fs>)';
+    protected $entry_pattern = '<fs\b.*?>(?=.*?</fs>)';
     protected $exit_pattern  = '</fs>';
 
     // Connect pattern to lexer
