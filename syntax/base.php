@@ -12,7 +12,7 @@ if(!defined('DOKU_INC')) die();
 
 class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
 
-    protected $entry_pattern = '<typo\b(?: .+?)?>(?=.+?</typo>)';
+    protected $entry_pattern = '<typo\b.*?>(?=.*?</typo>)';
     protected $exit_pattern  = '</typo>';
 
     protected $mode, $props, $cond;
@@ -86,21 +86,26 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
                 $attrs = array();
 
                 $tokens = explode(';', $params);
-                if ((count($tokens) == 1) && array_key_exists($markup, $this->props)) {
-                    // for inherited syntax class usage: <fs small>...</fs>
-                    $tokens[0] = $markup.':'.$tokens[0];
-                }
-                //msg('markup:'.$markup.' tokens='.var_export($tokens, true), 0);
 
-                foreach($tokens as $token) {
-                    if (empty($token)) continue;
-                    list($type, $val) = explode(':', trim($token));
-                    if (!array_key_exists($type, $this->props)) continue;
-                    if (preg_match($this->conds[$type], $val)) {
-                        if ($val == 'smallcaps') { $val = 'small-caps'; }
-                        $attrs[$type] = $val;
+                foreach ($tokens as $token) {
+                    if (strpos($token, ':') !== false) {
+                        list($property, $value) = explode(':', $token);
+                        $property = strtolower(trim($property));
+                        $value = trim($value);
+                    } else {
+                        // inherited syntax class usage: <fs small>...</fs>
+                        $property = $markup;
+                        $value = trim($token);
+                    }
+
+                    if (empty($value)) {
+                        continue;
+                    } elseif (array_key_exists($property, $this->props)) {
+                        if ($value == 'smallcaps') { $value = 'small-caps'; }
+                        $attrs = array($property => $value);
                     }
                 }
+
                 return array($state, $attrs);
                 break;
             case DOKU_LEXER_UNMATCHED: return array($state, $match);
