@@ -9,8 +9,7 @@ Typography is syntax plugin. Currently it covers all typographic aspects of CSS.
 It gives ability to adjust settings for text look, but does not influence subtle stuff like text baseline or vertical alignment.
 
 
-Syntax
-------
+## Syntax
 
 `<typo parameters>`beautiful looking test`</typo>` where parameters are semicolon separated `name:value;` 
 
@@ -23,6 +22,15 @@ Syntax
 |letter spacing  | `<typo ls:20px;>`Text`</typo>` | values below zero allowed |
 |spacing between word  | `<typo ws:20px;>`Text`</typo>` | values below zero allowed |
 
+## Shorter syntax
+
+The Typography plugin provides additional short (or single property) syntax those are compatible with [fontcolor](https://www.dokuwiki.org/plugin:fontcolor), [fontfamily](https://www.dokuwiki.org/plugin:fontfamily) and [fontsize2](https://www.dokuwiki.org/plugin:fontsize2) plugins. If you have enabled these three plugins, the short syntax are treated by relevant plugins instead of this plugin. These short syntax are available through toolbar icons: ![fontcolor icon](https://raw.githubusercontent.com/ssahara/dw-plugin-typography/master/images/fontcolor/picker.png) ![fontfamily icon](https://raw.githubusercontent.com/ssahara/dw-plugin-typography/master/images/fontfamily/picker.png) ![font-size icon](https://raw.githubusercontent.com/ssahara/dw-plugin-typography/master/images/fontsize/picker.png).
+
+```
+  <fc Turquoise>Specific color text</fc>        = <typo fc:Turquoise;>Specific color text</typo>
+  <ff 'Comic Sans MS'>Different font used</ff>  = <typo ff:'Comic Sans MS';>Different font used</typo>
+  <fs 200%>Large size text</fs>                 = <typo fs:200%;>Large size text</typo>
+```
 
 ----
 Licensed under the GNU Public License (GPL) version 2
