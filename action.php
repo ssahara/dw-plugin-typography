@@ -41,9 +41,8 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
      * @see https://www.dokuwiki.org/plugin:fontcolor
      */
     public function fontColorToolbar(Doku_Event $event, $param) {
-        if (extension_loaded('gd') && function_exists('imagecreatetruecolor')) {
-            $title_note = ''; // color icon generated using PHP GD library
-            $colors = array(
+        $title_note = '';
+        $colors = array(
                 'Yellow' => '#ffff00',
                 'Red' => '#ff0000',
                 'Orange' => '#ffa500',
@@ -71,13 +70,7 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
                 'Yellow Green' => '#9acd32',
                 'Dark Violet' => '#9400d3',
                 'Maroon' => '#800000'
-            );
-        } else { // PHP GD library is NOT available
-            $title_note = ' ⚠PHP GD not installed';
-            $colors = array(
-                'Red' => '#ff0000',
-            );
-        }
+        );
 
         $button = array(
                 'type'  => 'picker',

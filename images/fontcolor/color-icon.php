@@ -15,6 +15,7 @@ $isColorSet = array_key_exists('color', $_GET);
 if ($isSameHost && $isColorSet) {
 
     if (function_exists('imagecreatetruecolor')) {
+        // render PNG image using PHP GD library
         list($red, $green, $blue) = str_split($_GET['color'], 2);
         $img = imagecreatetruecolor(16, 16);
         imagefill($img, 0, 0, imagecolorallocate($img, hexdec($red), hexdec($green), hexdec($blue)));
@@ -23,11 +24,12 @@ if ($isSameHost && $isColorSet) {
         imagepng($img);
         imagedestroy($img);
     } else {
-        $icon = strtolower($_GET['color']) . '.png';
-        $img = file_get_contents( dirname(__FILE__). '/'. $icon);
-        if ($img === false) die("Icon file not found");
-        header('Content-type: image/png');
+        // render SVG image
+        $color = '#'.strtolower($_GET['color']);
+        header('Content-type: image/svg+xml');
         header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 60*60*24) . ' GMT');
-        echo $img;
+        echo '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">';
+        echo '<rect width="100%" height="100%" fill="'.$color.'"/>';
+        echo '</svg>';
     }
 }
