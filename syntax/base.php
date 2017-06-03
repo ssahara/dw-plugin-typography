@@ -117,8 +117,11 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
                 }
                 return array($state, $attrs);
                 break;
-            case DOKU_LEXER_UNMATCHED: return array($state, $match);
-            case DOKU_LEXER_EXIT:      return array($state, '');
+            case DOKU_LEXER_UNMATCHED:
+                $handler->_addCall('cdata', array($match), $pos);
+                return false;
+            case DOKU_LEXER_EXIT:
+                return array($state, '');
         }
         return array();
     }
@@ -149,14 +152,12 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
                     break;
                 }
                 $css = '';
-                foreach ($data as $type => $val) {
-                   $css .= $this->props[$type].$val.'; ';
+                foreach ($data as $property => $val) {
+                   $css .= $this->props[$property].$val.'; ';
                 }
                 $renderer->doc .= '<span style="'.substr($css,0,-1).'">';
                 break;
-            case DOKU_LEXER_UNMATCHED:
-                $renderer->doc .= $renderer->_xmlEntities($data);
-                break;
+
             case DOKU_LEXER_EXIT:
                 $renderer->doc .= '</span>';
                 break;
