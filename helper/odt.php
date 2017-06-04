@@ -28,14 +28,7 @@ class helper_plugin_typography_odt extends DokuWiki_Plugin {
                 }
                 $style = implode(' ', $css);
 
-                if (empty($data['line-height'])) {
-                    if (method_exists ($renderer, '_odtSpanOpenUseCSSStyle')) {
-                        $renderer->_odtSpanOpenUseCSSStyle($style);
-                    } else {
-                        $renderer->_odtSpanOpenUseCSS('span', 'style="'.$style.'"');
-                    }
-                    $this->closing_stack->push('span');
-                } else {
+                if (isset($data['line-height'])) {
                     $renderer->p_close();
                     if (method_exists ($renderer, '_odtParagraphOpenUseCSSStyle')) {
                         $renderer->_odtParagraphOpenUseCSSStyle($style);
@@ -43,11 +36,16 @@ class helper_plugin_typography_odt extends DokuWiki_Plugin {
                         $renderer->_odtParagraphOpenUseCSS('p', 'style="'.$style.'"');
                     }
                     $this->closing_stack->push('p');
+                } else {
+                    if (method_exists ($renderer, '_odtSpanOpenUseCSSStyle')) {
+                        $renderer->_odtSpanOpenUseCSSStyle($style);
+                    } else {
+                        $renderer->_odtSpanOpenUseCSS('span', 'style="'.$style.'"');
+                    }
+                    $this->closing_stack->push('span');
                 }
                 break;
-            case DOKU_LEXER_UNMATCHED:
-                $renderer->cdata($data);
-                break;
+
             case DOKU_LEXER_EXIT:
                 try {
                     $content = $this->closing_stack->pop();
