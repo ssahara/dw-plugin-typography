@@ -147,15 +147,14 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
         list($state, $data) = $indata;
         switch ($state) {
             case DOKU_LEXER_ENTER:
-                if (empty($data)) {
-                    $renderer->doc .= '<span>';
-                    break;
+                // build css rule-set
+                $css = array();
+                foreach ($data as $name => $value) {
+                    $css[] = $this->props[$name].$value.';';
                 }
-                $css = '';
-                foreach ($data as $property => $val) {
-                   $css .= $this->props[$property].$val.'; ';
-                }
-                $renderer->doc .= '<span style="'.substr($css,0,-1).'">';
+                $style = implode(' ', $css);
+                $attr = $style ? ' style="'.$style.'"' : '';
+                $renderer->doc .= '<span'.$attr.'>';
                 break;
 
             case DOKU_LEXER_EXIT:
