@@ -12,20 +12,6 @@ class helper_plugin_typography_odt extends DokuWiki_Plugin {
 
     protected $closing_stack = NULL; // used in odt_render()
 
-    protected $props = array(
-            'ff' => 'font-family:',
-            'fc' => 'color:',
-            'bg' => 'background-color:',
-            'fs' => 'font-size:',
-            'fw' => 'font-weight:',
-            'fv' => 'font-variant:',
-            'lh' => 'line-height:',
-            'ls' => 'letter-spacing:',
-            'ws' => 'word-spacing:',
-            'va' => 'vertical-align:',
-            'sp' => 'white-space:',
-        );
-
     public function render(Doku_Renderer $renderer, $indata) {
         list($state, $data) = $indata;
 
@@ -35,23 +21,26 @@ class helper_plugin_typography_odt extends DokuWiki_Plugin {
 
         switch ($state) {
             case DOKU_LEXER_ENTER:
-                $css = '';
-                foreach ($data as $type => $val) {
-                    $css .= $this->props[$type].$val.'; ';
+                // build css rule-set
+                $css = array();
+                foreach ($data as $name => $value) {
+                    $css[] = $name.':'.$value.';';
                 }
-                if (empty($data['lh'])) {
+                $style = implode(' ', $css);
+
+                if (empty($data['line-height'])) {
                     if (method_exists ($renderer, '_odtSpanOpenUseCSSStyle')) {
-                        $renderer->_odtSpanOpenUseCSSStyle($css);
+                        $renderer->_odtSpanOpenUseCSSStyle($style);
                     } else {
-                        $renderer->_odtSpanOpenUseCSS('span', 'style="'.$css.'"');
+                        $renderer->_odtSpanOpenUseCSS('span', 'style="'.$style.'"');
                     }
                     $this->closing_stack->push('span');
                 } else {
                     $renderer->p_close();
                     if (method_exists ($renderer, '_odtParagraphOpenUseCSSStyle')) {
-                        $renderer->_odtParagraphOpenUseCSSStyle($css);
+                        $renderer->_odtParagraphOpenUseCSSStyle($style);
                     } else {
-                        $renderer->_odtParagraphOpenUseCSS('p', 'style="'.$css.'"');
+                        $renderer->_odtParagraphOpenUseCSS('p', 'style="'.$style.'"');
                     }
                     $this->closing_stack->push('p');
                 }

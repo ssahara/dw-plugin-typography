@@ -22,17 +22,17 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
 
         // allowable parameters and relevant css properties
         $this->props = array(
-            'ff' => 'font-family:',
-            'fc' => 'color:',
-            'bg' => 'background-color:',
-            'fs' => 'font-size:',
-            'fw' => 'font-weight:',
-            'fv' => 'font-variant:',
-            'lh' => 'line-height:',
-            'ls' => 'letter-spacing:',
-            'ws' => 'word-spacing:',
-            'va' => 'vertical-align:',
-            'sp' => 'white-space:',
+            'ff' => 'font-family',
+            'fc' => 'color',
+            'bg' => 'background-color',
+            'fs' => 'font-size',
+            'fw' => 'font-weight',
+            'fv' => 'font-variant',
+            'lh' => 'line-height',
+            'ls' => 'letter-spacing',
+            'ws' => 'word-spacing',
+            'va' => 'vertical-align',
+            'sp' => 'white-space',
         );
 
         // allowable property pattern for parameters
@@ -97,6 +97,8 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
 
                     // check css property name
                     if (array_key_exists($property[0], $this->props)) {
+                        $name  = $this->props[$property[0]];
+                    } elseif (in_array($property[0], $this->props)) {
                         $name  = $property[0];
                     } else {
                         continue;
@@ -109,7 +111,7 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
                         $value = htmlspecialchars($property[1], ENT_COMPAT, 'UTF-8');
                     }
 
-                    if (($name == 'fv') && ($value == 'smallcaps')) {
+                    if (($name == 'font-variant') && ($value == 'smallcaps')) {
                         $value = 'small-caps';
                     }
                     //$css[$name] = $value;
@@ -149,7 +151,7 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
                 // build css rule-set
                 $css = array();
                 foreach ($data as $name => $value) {
-                    $css[] = $this->props[$name].$value.';';
+                    $css[] = $name.':'.$value.';';
                 }
                 $style = implode(' ', $css);
                 $attr = $style ? ' style="'.$style.'"' : '';
