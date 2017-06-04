@@ -83,40 +83,39 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
             case DOKU_LEXER_ENTER:
                 $markup = substr($this->exit_pattern, 2, -1);
 
+                $params = strtolower(ltrim(substr($match, strlen($markup)+1, -1)));
+
                 if (array_key_exists($markup, $this->props)) {
-                    // inherited syntax class usage: <fs small>...</fs>
-                    $params = trim(substr($match, strlen($markup)+1, -1));
-                    if ($params[0] != ':') {
-                        $params = ':'.$params;
-                    }
-                    $params = $markup.$params;
-                } else {
-                    $params = trim(strstr(substr($match, 1, -1), ' '));
+                    $params = $markup.(($params[0] == ':') ? '' : ':').$params;
                 }
 
-                $attrs = array();
+                // parse css rule-set
+                $css = array();
                 $tokens = explode(';', $params);
                 foreach ($tokens as $token) {
-                    if (strpos($token, ':') !== false) {
-                        list($property, $value) = explode(':', $token);
-                        $property = strtolower(trim($property));
-                        $value = trim($value);
+                    $property = array_map('trim', explode(':', $token, 2));
+
+                    // check css property name
+                    if (array_key_exists($property[0], $this->props)) {
+                        $name  = $property[0];
                     } else {
                         continue;
                     }
 
-                    if (array_key_exists($property, $this->props)) {
-                        if ($value == 'smallcaps') {
-                            $value = 'small-caps';
-                        } elseif (empty($value)) {
-                            continue;
-                        }
-                        //$attrs[$property] = $value;
-                        $attrs += array($property => $value);
+                    // check css property value
+                    if ((count($property) < 2) || empty($property[1])) {
+                        continue;
+                    } else {
+                        $value = htmlspecialchars($property[1], ENT_COMPAT, 'UTF-8');
                     }
+
+                    if (($name == 'fv') && ($value == 'smallcaps')) {
+                        $value = 'small-caps';
+                    }
+                    //$css[$name] = $value;
+                    $css += array($name => $value);
                 }
-                return array($state, $attrs);
-                break;
+                return array($state, $css);
             case DOKU_LEXER_UNMATCHED:
                 $handler->_addCall('cdata', array($match), $pos);
                 return false;
