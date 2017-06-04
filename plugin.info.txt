@@ -4,6 +4,6 @@ author Paweł Piekarski
 email  <qentinson@gmail.com>
 author Satoshi Sahara
 email  <sahara.satoshi@gmail.com>
-date   2017-05-16
+date   2017-06-04
 desc   Enable html typographic capabilities for DokuWiki
 url    https://www.dokuwiki.org/plugin:typography
