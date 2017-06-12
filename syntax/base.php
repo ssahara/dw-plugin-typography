@@ -45,16 +45,24 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
                    .'(^rgb\((\d{1,3}%?,){2}\d{1,3}%?\)$)|'
                    .'(^rgba\((\d{1,3}%?,){3}[\d.]+\)$)|'
                    .'(^[a-zA-Z]+$)/',
-            'fs' => '/(^\d+(?:\.\d+)?(px|em|ex|pt|%))$|'
-                   .'^(xx-small|x-small|small|medium|large|x-large|xx-large|smaller|larger)$/',
-            'fw' => '/^(normal|bold|bolder|lighter|\d00)$/',
-            'fv' => '/^(normal|small-?caps)$/',
-            'lh' => '/^\d+(?:\.\d+)?(px|em|ex|pt|%)?$/',
-            'ls' => '/^-?\d+(?:\.\d+)?(px|em|ex|pt|%)$/',
-            'ws' => '/^-?\d+(?:\.\d+)?(px|em|ex|pt|%)$/',
-            'va' => '/^-?\d+(?:\.\d+)?(px|em|ex|pt|%)$|'
-                   .'^(baseline|sub|super|top|text-top|middle|bottom|text-bottom|inherit)$/',
-            'sp' => '/^(normal|nowrap|pre|pre-line|pre-wrap)$/',
+            'font-size' =>
+                 '/(^\d+(?:\.\d+)?(?:px|em|ex|pt|%))$|'
+                .'^(x{1,2}-small|small|medium|large|x{1,2}-large|smaller|larger)$/',
+            'font-weight' =>
+                 '/^(?:normal|bold|bolder|lighter|\d00)$/',
+            'font-variant' =>
+                 '/^(?:normal|small-?caps)$/',
+            'line-height' =>
+                 '/^\d+(?:\.\d+)?(?:px|em|ex|pt|%)?$/',
+            'letter-spacing' =>
+                 '/^-?\d+(?:\.\d+)?(?:px|em|ex|pt|%)$/',
+            'word-spacing' =>
+                 '/^-?\d+(?:\.\d+)?(?:px|em|ex|pt|%)$/',
+            'vertical-align' =>
+                 '/^-?\d+(?:\.\d+)?(?:px|em|ex|pt|%)$|'
+                .'^(?:baseline|sub|super|top|text-top|middle|bottom|text-bottom|inherit)$/',
+            'white-space' =>
+                 '/^(?:normal|nowrap|pre|pre-line|pre-wrap)$/',
         );
     }
 
