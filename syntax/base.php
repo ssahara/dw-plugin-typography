@@ -102,6 +102,7 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
                 $tokens = explode(';', $params);
                 foreach ($tokens as $token) {
                     $property = array_map('trim', explode(':', $token, 2));
+                    if (!isset($property[1])) continue;
 
                     // check css property name
                     if (array_key_exists($property[0], $this->props)) {
@@ -113,14 +114,17 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
                     }
 
                     // check css property value
-                    if ((count($property) < 2) || empty($property[1])) {
-                        continue;
+                    if (isset($this->conds[$name])) {
+                        if (preg_match($this->conds[$name], $property[1], $matches)) {
+                            $value = $property[1];
+                        } else {
+                            continue;
+                        }
+                        if (($name == 'font-variant') && ($value == 'smallcaps')) {
+                            $value = 'small-caps';
+                        }
                     } else {
                         $value = htmlspecialchars($property[1], ENT_COMPAT, 'UTF-8');
-                    }
-
-                    if (($name == 'font-variant') && ($value == 'smallcaps')) {
-                        $value = 'small-caps';
                     }
                     //$css[$name] = $value;
                     $css += array($name => $value);
