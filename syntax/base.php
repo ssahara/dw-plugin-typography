@@ -46,10 +46,10 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
                    .'(^rgba\((\d{1,3}%?,){3}[\d.]+\)$)|'
                    .'(^[a-zA-Z]+$)/',
             'font-size' =>
-                 '/(^\d+(?:\.\d+)?(?:px|em|ex|pt|%))$|'
-                .'^(x{1,2}-small|small|medium|large|x{1,2}-large|smaller|larger)$/',
+                 '/^(?:\d+(?:\.\d+)?(?:px|em|ex|pt|%)'
+                .'|(?:x{1,2}-)?small|medium|(?:x{1,2}-)?large|smaller|larger)$/',
             'font-weight' =>
-                 '/^(?:normal|bold|bolder|lighter|\d00)$/',
+                 '/^(?:\d00|normal|bold|bolder|lighter)$/',
             'font-variant' =>
                  '/^(?:normal|small-?caps)$/',
             'line-height' =>
@@ -93,7 +93,7 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
 
                 $params = strtolower(ltrim(substr($match, strlen($markup)+1, -1)));
 
-                if (array_key_exists($markup, $this->props)) {
+                if (isset($this->props[$markup])) {
                     $params = $markup.(($params[0] == ':') ? '' : ':').$params;
                 }
 
@@ -105,10 +105,10 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
                     if (!isset($property[1])) continue;
 
                     // check css property name
-                    if (array_key_exists($property[0], $this->props)) {
-                        $name  = $this->props[$property[0]];
+                    if (isset($this->props[$property[0]])) {
+                        $name = $this->props[$property[0]];
                     } elseif (in_array($property[0], $this->props)) {
-                        $name  = $property[0];
+                        $name = $property[0];
                     } else {
                         continue;
                     }
