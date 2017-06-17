@@ -45,16 +45,24 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
                    .'(^rgb\((\d{1,3}%?,){2}\d{1,3}%?\)$)|'
                    .'(^rgba\((\d{1,3}%?,){3}[\d.]+\)$)|'
                    .'(^[a-zA-Z]+$)/',
-            'fs' => '/(^\d+(?:\.\d+)?(px|em|ex|pt|%))$|'
-                   .'^(xx-small|x-small|small|medium|large|x-large|xx-large|smaller|larger)$/',
-            'fw' => '/^(normal|bold|bolder|lighter|\d00)$/',
-            'fv' => '/^(normal|small-?caps)$/',
-            'lh' => '/^\d+(?:\.\d+)?(px|em|ex|pt|%)?$/',
-            'ls' => '/^-?\d+(?:\.\d+)?(px|em|ex|pt|%)$/',
-            'ws' => '/^-?\d+(?:\.\d+)?(px|em|ex|pt|%)$/',
-            'va' => '/^-?\d+(?:\.\d+)?(px|em|ex|pt|%)$|'
-                   .'^(baseline|sub|super|top|text-top|middle|bottom|text-bottom|inherit)$/',
-            'sp' => '/^(normal|nowrap|pre|pre-line|pre-wrap)$/',
+            'font-size' =>
+                 '/^(?:\d+(?:\.\d+)?(?:px|em|ex|pt|%)'
+                .'|(?:x{1,2}-)?small|medium|(?:x{1,2}-)?large|smaller|larger)$/',
+            'font-weight' =>
+                 '/^(?:\d00|normal|bold|bolder|lighter)$/',
+            'font-variant' =>
+                 '/^(?:normal|small-?caps)$/',
+            'line-height' =>
+                 '/^\d+(?:\.\d+)?(?:px|em|ex|pt|%)?$/',
+            'letter-spacing' =>
+                 '/^-?\d+(?:\.\d+)?(?:px|em|ex|pt|%)$/',
+            'word-spacing' =>
+                 '/^-?\d+(?:\.\d+)?(?:px|em|ex|pt|%)$/',
+            'vertical-align' =>
+                 '/^-?\d+(?:\.\d+)?(?:px|em|ex|pt|%)$|'
+                .'^(?:baseline|sub|super|top|text-top|middle|bottom|text-bottom|inherit)$/',
+            'white-space' =>
+                 '/^(?:normal|nowrap|pre|pre-line|pre-wrap)$/',
         );
     }
 
@@ -85,7 +93,7 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
 
                 $params = strtolower(ltrim(substr($match, strlen($markup)+1, -1)));
 
-                if (array_key_exists($markup, $this->props)) {
+                if (isset($this->props[$markup])) {
                     $params = $markup.(($params[0] == ':') ? '' : ':').$params;
                 }
 
@@ -94,25 +102,29 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
                 $tokens = explode(';', $params);
                 foreach ($tokens as $token) {
                     $property = array_map('trim', explode(':', $token, 2));
+                    if (!isset($property[1])) continue;
 
                     // check css property name
-                    if (array_key_exists($property[0], $this->props)) {
-                        $name  = $this->props[$property[0]];
+                    if (isset($this->props[$property[0]])) {
+                        $name = $this->props[$property[0]];
                     } elseif (in_array($property[0], $this->props)) {
-                        $name  = $property[0];
+                        $name = $property[0];
                     } else {
                         continue;
                     }
 
                     // check css property value
-                    if ((count($property) < 2) || empty($property[1])) {
-                        continue;
+                    if (isset($this->conds[$name])) {
+                        if (preg_match($this->conds[$name], $property[1], $matches)) {
+                            $value = $property[1];
+                        } else {
+                            continue;
+                        }
+                        if (($name == 'font-variant') && ($value == 'smallcaps')) {
+                            $value = 'small-caps';
+                        }
                     } else {
                         $value = htmlspecialchars($property[1], ENT_COMPAT, 'UTF-8');
-                    }
-
-                    if (($name == 'font-variant') && ($value == 'smallcaps')) {
-                        $value = 'small-caps';
                     }
                     //$css[$name] = $value;
                     $css += array($name => $value);
