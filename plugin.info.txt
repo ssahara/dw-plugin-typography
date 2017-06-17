@@ -4,6 +4,6 @@ author Paweł Piekarski
 email  <qentinson@gmail.com>
 author Satoshi Sahara
 email  <sahara.satoshi@gmail.com>
-date   2017-06-04
-desc   Enable html typographic capabilities for DokuWiki
+date   2017-06-17
+desc   Enable typesetting capabilities with CSS font properties such as font face, size, weight, and color of text
 url    https://www.dokuwiki.org/plugin:typography

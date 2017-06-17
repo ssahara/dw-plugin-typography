@@ -5,7 +5,7 @@ Extended version from original [Typography plugin](http://treecode.pl/typography
 Typography plugin extends DokuWiki markup by typesetting abilities. The `<typo>` markup tag specifies CSS font properties such as font face, size, weight, and color of text.
 The parameter consists of CSS property-value pairs (`property: value;`), each pair must be separated by semicolon (`;`) however last one may be omitted. You can use abbreviated **short name** instead of full property name.
 
-Some specific short name are also available as markup tag; `<ff>` (font familiy/name), `<fc>` (color), `<fs>` (size), `<fw>` (weight). First three of them are compatible with [fontfamily](https://www.dokuwiki.org/plugin:fontfamily), [fontcolor](https://www.dokuwiki.org/plugin:fontcolor), and [fontsize2](https://www.dokuwiki.org/plugin:fontsize2) plugins respectively. These short syntax are available through toolbar icons: ![fontcolor icon](https://raw.githubusercontent.com/ssahara/dw-plugin-typography/master/images/fontcolor/picker.png) ![fontfamily icon](https://raw.githubusercontent.com/ssahara/dw-plugin-typography/master/images/fontfamily/picker.png) ![font-size icon](https://raw.githubusercontent.com/ssahara/dw-plugin-typography/master/images/fontsize/picker.png).
+Some specific **short name** are also available as markup tag; `<ff>` (font familiy/name), `<fc>` (color), `<fs>` (size), `<fw>` (weight). First three of them are compatible with [fontfamily](https://www.dokuwiki.org/plugin:fontfamily), [fontcolor](https://www.dokuwiki.org/plugin:fontcolor), and [fontsize2](https://www.dokuwiki.org/plugin:fontsize2) plugins respectively. These short syntax are available through toolbar icons: ![fontcolor icon](https://raw.githubusercontent.com/ssahara/dw-plugin-typography/master/images/fontcolor/picker.png) ![fontfamily icon](https://raw.githubusercontent.com/ssahara/dw-plugin-typography/master/images/fontfamily/picker.png) ![font-size icon](https://raw.githubusercontent.com/ssahara/dw-plugin-typography/master/images/fontsize/picker.png).
 
 
 | short name | css property name | description |
@@ -36,7 +36,7 @@ Syntax / Usage
 <fs:xx-large>Huge</fs>, and 
 <fs smaller>smaller</fs> size text
 ```
-![Example 1](https://github.com/ssahara/dw-plugin-typography/raw/dev2/example/typography-example1.png)
+![Example 1](https://raw.githubusercontent.com/ssahara/dw-plugin-typography/master/example/typography-example1.png)
 
 ### Multiple parameter example:
 
@@ -44,7 +44,7 @@ Syntax / Usage
 <typo fs:larger; fw:bold; ff:serif>Bold serif</typo>, 
 <fs:large; fv:small-caps>Small-caps</fs> text
 ```
-![Example 2](https://github.com/ssahara/dw-plugin-typography/raw/dev2/example/typography-example2.png)
+![Example 2](https://raw.githubusercontent.com/ssahara/dw-plugin-typography/master/example/typography-example2.png)
 
 ### Nesting syntax:
 
@@ -54,7 +54,7 @@ There is nothing either good or bad, \\ but thinking makes it so.
 </fs>\\
 <fs:smaller;>//-- William Shakespeare, “Hamlet”, Act 2 scene 2//</fs></ff>
 ```
-![Example 3](https://github.com/ssahara/dw-plugin-typography/raw/dev2/example/typography-example3.png)
+![Example 3](https://raw.githubusercontent.com/ssahara/dw-plugin-typography/master/example/typography-example3.png)
 
 
 ----
