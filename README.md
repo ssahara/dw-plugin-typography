@@ -36,6 +36,7 @@ Syntax / Usage
 <fs:xx-large>Huge</fs>, and 
 <fs smaller>smaller</fs> size text
 ```
+![Example 1](https://github.com/ssahara/dw-plugin-typography/raw/dev2/example/typography-example1.png)
 
 ### Multiple parameter example:
 
@@ -43,6 +44,7 @@ Syntax / Usage
 <typo fs:larger; fw:bold; ff:serif>Bold serif</typo>, 
 <fs:large; fv:small-caps>Small-caps</fs> text
 ```
+![Example 2](https://github.com/ssahara/dw-plugin-typography/raw/dev2/example/typography-example2.png)
 
 ### Nesting syntax:
 
@@ -52,6 +54,7 @@ There is nothing either good or bad, \\ but thinking makes it so.
 </fs>\\
 <fs:smaller;>//-- William Shakespeare, “Hamlet”, Act 2 scene 2//</fs></ff>
 ```
+![Example 3](https://github.com/ssahara/dw-plugin-typography/raw/dev2/example/typography-example3.png)
 
 
 ----
