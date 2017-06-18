@@ -15,67 +15,27 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
     protected $entry_pattern = '<typo\b.*?>(?=.*?</typo>)';
     protected $exit_pattern  = '</typo>';
 
-    protected $mode, $props, $cond;
+    protected $mode;
+    protected $styler = null;
 
     public function __construct() {
         $this->mode = substr(get_class($this), 7); // drop 'syntax_' from class name
-
-        // allowable parameters and relevant css properties
-        $this->props = array(
-            'ff' => 'font-family',
-            'fc' => 'color',
-            'bg' => 'background-color',
-            'fs' => 'font-size',
-            'fw' => 'font-weight',
-            'fv' => 'font-variant',
-            'lh' => 'line-height',
-            'ls' => 'letter-spacing',
-            'ws' => 'word-spacing',
-            'va' => 'vertical-align',
-            'sp' => 'white-space',
-        );
-
-        // allowable property pattern for parameters
-        $this->conds = array(
-            'ff' => '/^((\'[^,]+?\'|[^ ,]+?) *,? *)+$/',
-            'fc' => '/(^\#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$)|'
-                   .'(^rgb\((\d{1,3}%?,){2}\d{1,3}%?\)$)|'
-                   .'(^[a-zA-Z]+$)/',
-            'bg' => '/(^\#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$)|'
-                   .'(^rgb\((\d{1,3}%?,){2}\d{1,3}%?\)$)|'
-                   .'(^rgba\((\d{1,3}%?,){3}[\d.]+\)$)|'
-                   .'(^[a-zA-Z]+$)/',
-            'font-size' =>
-                 '/^(?:\d+(?:\.\d+)?(?:px|em|ex|pt|%)'
-                .'|(?:x{1,2}-)?small|medium|(?:x{1,2}-)?large|smaller|larger)$/',
-            'font-weight' =>
-                 '/^(?:\d00|normal|bold|bolder|lighter)$/',
-            'font-variant' =>
-                 '/^(?:normal|small-?caps)$/',
-            'line-height' =>
-                 '/^\d+(?:\.\d+)?(?:px|em|ex|pt|%)?$/',
-            'letter-spacing' =>
-                 '/^-?\d+(?:\.\d+)?(?:px|em|ex|pt|%)$/',
-            'word-spacing' =>
-                 '/^-?\d+(?:\.\d+)?(?:px|em|ex|pt|%)$/',
-            'vertical-align' =>
-                 '/^-?\d+(?:\.\d+)?(?:px|em|ex|pt|%)$|'
-                .'^(?:baseline|sub|super|top|text-top|middle|bottom|text-bottom|inherit)$/',
-            'white-space' =>
-                 '/^(?:normal|nowrap|pre|pre-line|pre-wrap)$/',
-        );
     }
 
     public function getType() { return 'formatting'; }
     public function getSort() { return 67; } // = Doku_Parser_Mode_formatting:strong -3
-    public function getAllowedTypes() { return array('formatting', 'substition', 'disabled'); }
-    // override default accepts() method to allow nesting - ie, to get the plugin accepts its own entry syntax
+    public function getAllowedTypes() {
+        return array('formatting', 'substition', 'disabled');
+    }
+    // plugin accepts its own entry syntax
     public function accepts($mode) {
         if ($mode == $this->mode) return true;
         return parent::accepts($mode);
     }
 
-    // Connect pattern to lexer
+    /**
+     * Connect pattern to lexer
+     */
     public function connectTo($mode) {
         $this->Lexer->addEntryPattern($this->entry_pattern, $mode, $this->mode);
     }
@@ -89,50 +49,29 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
     public function handle($match, $state, $pos, Doku_Handler $handler) {
         switch($state) {
             case DOKU_LEXER_ENTER:
+                // load prameter parser utility
+                if (is_null($this->styler)) {
+                    $this->styler = $this->loadHelper('typography_parser');
+                }
+
+                // identify markup keyword
                 $markup = substr($this->exit_pattern, 2, -1);
 
+                // get inline CSS parameter
                 $params = strtolower(ltrim(substr($match, strlen($markup)+1, -1)));
-
-                if (isset($this->props[$markup])) {
+                if ($this->styler->is_short_property($markup)) {
                     $params = $markup.(($params[0] == ':') ? '' : ':').$params;
                 }
 
-                // parse css rule-set
-                $css = array();
-                $tokens = explode(';', $params);
-                foreach ($tokens as $token) {
-                    $property = array_map('trim', explode(':', $token, 2));
-                    if (!isset($property[1])) continue;
+                // get css property:value pairs as an associative array
+                $css = $this->styler->parse_inlineCSS($params);
 
-                    // check css property name
-                    if (isset($this->props[$property[0]])) {
-                        $name = $this->props[$property[0]];
-                    } elseif (in_array($property[0], $this->props)) {
-                        $name = $property[0];
-                    } else {
-                        continue;
-                    }
-
-                    // check css property value
-                    if (isset($this->conds[$name])) {
-                        if (preg_match($this->conds[$name], $property[1], $matches)) {
-                            $value = $property[1];
-                        } else {
-                            continue;
-                        }
-                        if (($name == 'font-variant') && ($value == 'smallcaps')) {
-                            $value = 'small-caps';
-                        }
-                    } else {
-                        $value = htmlspecialchars($property[1], ENT_COMPAT, 'UTF-8');
-                    }
-                    //$css[$name] = $value;
-                    $css += array($name => $value);
-                }
                 return array($state, $css);
+
             case DOKU_LEXER_UNMATCHED:
                 $handler->_addCall('cdata', array($match), $pos);
                 return false;
+
             case DOKU_LEXER_EXIT:
                 return array($state, '');
         }
@@ -160,12 +99,12 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
         list($state, $data) = $indata;
         switch ($state) {
             case DOKU_LEXER_ENTER:
-                // build css rule-set
-                $css = array();
-                foreach ($data as $name => $value) {
-                    $css[] = $name.':'.$value.';';
+                // load prameter parser utility
+                if (is_null($this->styler)) {
+                    $this->styler = $this->loadHelper('typography_parser');
                 }
-                $style = implode(' ', $css);
+                // build inline CSS
+                $style = $this->styler->build_inlineCSS($data);
                 $attr = $style ? ' style="'.$style.'"' : '';
                 $renderer->doc .= '<span'.$attr.'>';
                 break;
