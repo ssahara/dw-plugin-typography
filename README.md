@@ -15,7 +15,7 @@ Some specific **short name** are also available as markup tag; `<ff>` (font fami
 |  `fs`  | font-size         | font size of text (large or small) |
 |  `fw`  | font-weight       | weight of a font (thick or thin characters in text) |
 |  `fv`  | font-variant      | display text in a small-caps font |
-|  `ff`  | font-family       | font family for text, must be single quoted if a font name contains white-space |
+|  `ff`  | font-family       | font family for text, must be single quoted if a font name contains white-space or non-ASCII characters |
 |  `lh`  | line-height       | space between the lines |
 |  `ls`  | letter-spacing    | an extra space between characters  (in px, em, etc) |
 |  `ws`  | word-spacing      | an additional space between words (in px, em, etc) |
