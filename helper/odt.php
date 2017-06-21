@@ -21,7 +21,7 @@ class helper_plugin_typography_odt extends DokuWiki_Plugin {
 
         switch ($state) {
             case DOKU_LEXER_ENTER:
-                // build css rule-set
+                // build style attribute
                 $css = array();
                 foreach ($data as $name => $value) {
                     $css[] = $name.':'.$value.';';
@@ -40,7 +40,14 @@ class helper_plugin_typography_odt extends DokuWiki_Plugin {
                     if (method_exists ($renderer, '_odtSpanOpenUseCSSStyle')) {
                         $renderer->_odtSpanOpenUseCSSStyle($style);
                     } else {
-                        $renderer->_odtSpanOpenUseCSS('span', 'style="'.$style.'"');
+                     // $renderer->_odtSpanOpenUseCSS('span', 'style="'.$style.'"');
+                     /*
+                      * NOTE:
+                      * Should we use another method _odtSpanOpenUseProperties() here
+                      * to avoid buiding style attribute from $data?
+                      * @see https://github.com/LarsGit223/dokuwiki-plugin-odt/blob/master/renderer/page.php#L1769
+                      */
+                         $renderer->_odtSpanOpenUseProperties($data);
                     }
                     $this->closing_stack->push('span');
                 }
