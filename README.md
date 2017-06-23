@@ -21,6 +21,8 @@ Some specific **short name** are also available as markup tag; `<ff>` (font fami
 |  `ws`  | word-spacing      | an additional space between words (in px, em, etc) |
 |  `sp`  | white-space       | specifies how white-space is handled (preserve or collapse) |
 |  `va`  | vertical-align    | sets the vertical alignment |
+|  -     | text-transform  | controls capitalization of text (capitalize, uppercase or lowercase) |
+|  -     | text-shadow      | adds shadow to text |
 
 Sometimes, inline styles are necessary when you are building a page by hand. You should however avoid them whenever possible for "semantic markup", better maintainability, and reusability. The [wrap plugin](https://www.dokuwiki.org/plugin:wrap) will provide most powerful and flexible method for specifying a class attribute.
 

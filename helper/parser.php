@@ -26,6 +26,8 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin {
             'ws' => 'word-spacing',
             'va' => 'vertical-align',
             'sp' => 'white-space',
+              0  => 'text-shadow',
+              1  => 'text-transform',
         );
 
         // allowable property pattern for parameters
