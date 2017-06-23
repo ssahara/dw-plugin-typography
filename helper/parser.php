@@ -95,10 +95,11 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin {
      * parse style attribute of an element
      *
      * @param   string $style  style attribute of an element
+     * @param   bool $filter   allow only CSS properties defined in $this->props
      * @return  array  an associative array containing CSS property-value pairs
      */
-    function parse_inlineCSS($style) {
-        $css = array();
+     function parse_inlineCSS($style, $filter=true) {
+       $css = array();
         if (empty($style)) return $css;
 
         $declarations = explode(';', $style);
@@ -112,8 +113,10 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin {
                 $name = $this->props[$property[0]];
             } elseif (in_array($property[0], $this->props)) {
                 $name = $property[0];
+            } elseif ($filter === false) {
+                $name = $property[0];  // assume as CSS property
             } else {
-                continue;
+                continue;              // ignore unknown property
             }
 
             // check CSS property value
