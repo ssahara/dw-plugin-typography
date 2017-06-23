@@ -62,6 +62,26 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin {
     }
 
     /**
+     * Get allowed CSS properties
+     *
+     * @return  array
+     */
+    function getAllowedProps() {
+        return $this->props;
+    }
+
+    /**
+     * Set allowed CSS properties
+     *
+     * @param array $props  allowable CSS property name
+     * @return  bool
+     */
+    function setAllowedProps(array $props) {
+        $this->props = $props;
+        return true;
+    }
+
+    /**
      * validation of CSS property short name
      *
      * @param   string $name  short name of CSS property
@@ -121,7 +141,7 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin {
      * @param   array $declarations  CSS property-value pairs
      * @return  string  inline CSS for style attribute
      */
-    function build_inlineCSS($declarations) {
+    function build_inlineCSS(array $declarations) {
         $css = array();
         foreach ($declarations as $name => $value) {
             $css[] = $name.':'.$value.';';
