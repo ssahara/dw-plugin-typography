@@ -98,13 +98,13 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin {
      * @param   bool $filter   allow only CSS properties defined in $this->props
      * @return  array  an associative array containing CSS property-value pairs
      */
-     function parse_inlineCSS($style, $filter=true) {
-       $css = array();
-        if (empty($style)) return $css;
+    function parse_inlineCSS($style, $filter=true) {
+        $declarations = array();
+        if (empty($style)) return $declarations;
 
-        $declarations = explode(';', $style);
+        $tokens = explode(';', $style);
 
-        foreach ($declarations as $declaration) {
+        foreach ($tokens as $declaration) {
             $property = array_map('trim', explode(':', $declaration, 2));
             if (!isset($property[1])) continue;
 
@@ -132,10 +132,10 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin {
             } else {
                 $value = htmlspecialchars($property[1], ENT_COMPAT, 'UTF-8');
             }
-            //$css[$name] = $value;
-            $css += array($name => $value);
+            //$declarations[$name] = $value;
+            $declarations += array($name => $value);
         }
-        return $css;
+        return $declarations;
     }
 
     /**
