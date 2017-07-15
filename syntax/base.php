@@ -103,10 +103,8 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
                 if (is_null($this->styler)) {
                     $this->styler = $this->loadHelper('typography_parser');
                 }
-                // build inline CSS
-                $style = $this->styler->build_inlineCSS($data);
-                $attr = $style ? ' style="'.$style.'"' : '';
-                $renderer->doc .= '<span'.$attr.'>';
+                // build attributes (style and class)
+                $renderer->doc .= '<span'.$this->styler->build_attributes($data).'>';
                 break;
 
             case DOKU_LEXER_EXIT:

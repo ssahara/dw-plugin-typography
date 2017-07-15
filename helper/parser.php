@@ -15,6 +15,7 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin {
     function __construct() {
         // allowable parameters and relevant CSS properties
         $this->props = array(
+            'wf' => 'wf',           // exceptional class="wf_webfont"
             'ff' => 'font-family',
             'fc' => 'color',
             'bg' => 'background-color',
@@ -100,6 +101,7 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin {
      */
     function parse_inlineCSS($style, $filter=true) {
         $declarations = array();
+
         if (empty($style)) return $declarations;
 
         $tokens = explode(';', $style);
@@ -124,7 +126,7 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin {
                 if (preg_match($this->conds[$name], $property[1], $matches)) {
                     $value = $property[1];
                 } else {
-                    continue;
+                    continue; // ignore invalid property value
                 }
                 if (($name == 'font-variant') && ($value == 'smallcaps')) {
                     $value = 'small-caps';
@@ -132,6 +134,13 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin {
             } else {
                 $value = htmlspecialchars($property[1], ENT_COMPAT, 'UTF-8');
             }
+
+            // webfont : wf: webfont_class_without_prefix;
+            if ($name == 'wf') {
+                $name  = 'class';
+                $value = 'wf-'.$value;
+            }
+
             //$declarations[$name] = $value;
             $declarations += array($name => $value);
         }
@@ -147,9 +156,38 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin {
     function build_inlineCSS(array $declarations) {
         $css = array();
         foreach ($declarations as $name => $value) {
+            if ($name == 'class') continue;
             $css[] = $name.':'.$value.';';
         }
         return implode(' ', $css);
+    }
+
+    /**
+     * build style and class attribute of an element
+     * NOTE: assume $declarations['class'] as class attribute
+     *
+     * @param   array $declarations  CSS property-value pairs
+     * @return  string
+     */
+    function build_attributes(array $declarations) {
+        $attr = array();
+        $css = $item = array();
+        foreach ($declarations as $name => $value) {
+            if ($name == 'class') {
+                $attr['class'] = $value;
+            } else {
+                $css[] = $name.':'.$value.';';
+            }
+        }
+        if (!empty($css)) {
+            $attr['style'] = implode(' ', $css);
+        }
+
+        foreach ($attr as $name => $value) {
+            $item[] = $name.'="'.$value.'"';
+        }
+        $out = empty($item) ? '' : ' '.implode(' ', $item);
+        return $out;
     }
 
 }
