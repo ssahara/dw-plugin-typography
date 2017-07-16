@@ -23,6 +23,7 @@ class helper_plugin_typography_odt extends DokuWiki_Plugin {
             case DOKU_LEXER_ENTER:
                 // build css rule-set
                 $css = array();
+                unset($data['class']);
                 foreach ($data as $name => $value) {
                     $css[] = $name.':'.$value.';';
                 }
