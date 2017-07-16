@@ -15,7 +15,7 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin {
     function __construct() {
         // allowable parameters and relevant CSS properties
         $this->props = array(
-            'wf' => 'wf',           // exceptional class="wf_webfont"
+            'wf' => 'wf',           // exceptional class="wf-webfont"
             'ff' => 'font-family',
             'fc' => 'color',
             'bg' => 'background-color',
@@ -33,6 +33,7 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin {
 
         // allowable property pattern for parameters
         $this->conds = array(
+            'wf' => '/^[a-zA-Z_-]+$/',
             'ff' => '/^((\'[^,]+?\'|[^ ,]+?) *,? *)+$/',
             'fc' => '/(^\#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$)|'
                    .'(^rgb\((\d{1,3}%?,){2}\d{1,3}%?\)$)|'
