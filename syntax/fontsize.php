@@ -13,13 +13,20 @@ require_once(dirname(__FILE__).'/base.php');
 
 class syntax_plugin_typography_fontsize extends syntax_plugin_typography_base {
 
-    protected $entry_pattern = '<fs\b.*?>(?=.*?</fs>)';
-    protected $exit_pattern  = '</fs>';
+    protected $pattern = array(
+        1 => '<fs\b.*?>(?=.*?</fs>)',
+        4 => '</fs>',
+    );
 
     // Connect pattern to lexer
-    public function connectTo($mode) {
+    function connectTo($mode) {
         if (plugin_isdisabled('fontsize2')) {
-            $this->Lexer->addEntryPattern($this->entry_pattern, $mode, $this->mode);
+            $this->Lexer->addEntryPattern($this->pattern[1], $mode, $this->mode);
+        }
+    }
+    function postConnect() {
+        if (plugin_isdisabled('fontsize2')) {
+            $this->Lexer->addExitPattern($this->pattern[4], $this->mode);
         }
     }
 

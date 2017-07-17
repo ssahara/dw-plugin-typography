@@ -11,12 +11,17 @@ require_once(dirname(__FILE__).'/base.php');
 
 class syntax_plugin_typography_smallcaps extends syntax_plugin_typography_base {
 
-    protected $entry_pattern = '<smallcaps\b.*?>(?=.*?</smallcaps>)';
-    protected $exit_pattern  = '</smallcaps>';
+    protected $pattern = array(
+        1 => '<smallcaps\b.*?>(?=.*?</smallcaps>)',
+        4 => '</smallcaps>',
+    );
 
     //protected $styler = null;
 
-    public function handle($match, $state, $pos, Doku_Handler $handler) {
+    /*
+     * Handle the match
+     */
+    function handle($match, $state, $pos, Doku_Handler $handler) {
         switch($state) {
             case DOKU_LEXER_ENTER:
                 // load prameter parser utility
@@ -28,9 +33,9 @@ class syntax_plugin_typography_smallcaps extends syntax_plugin_typography_base {
                 $params = 'fv:small-caps;'.strtolower(ltrim(substr($match, 10, -1)));
 
                 // get css property:value pairs as an associative array
-                $css = $this->styler->parse_inlineCSS($params);
+                $tag_data = $this->styler->parse_inlineCSS($params);
 
-                return array($state, $css);
+                return array($state, $tag_data);
 
             case DOKU_LEXER_UNMATCHED:
                 $handler->_addCall('cdata', array($match), $pos);

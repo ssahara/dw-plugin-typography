@@ -11,7 +11,9 @@ require_once(dirname(__FILE__).'/base.php');
 
 class syntax_plugin_typography_webfont extends syntax_plugin_typography_base {
 
-    protected $entry_pattern = '<wf\b.*?>(?=.*?</wf>)';
-    protected $exit_pattern  = '</wf>';
+    protected $pattern = array(
+        1 => '<wf\b.*?>(?=.*?</wf>)',
+        4 => '</wf>',
+    );
 
 }

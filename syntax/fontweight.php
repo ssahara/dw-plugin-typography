@@ -11,7 +11,9 @@ require_once(dirname(__FILE__).'/base.php');
 
 class syntax_plugin_typography_fontweight extends syntax_plugin_typography_base {
 
-    protected $entry_pattern = '<fw\b.*?>(?=.*?</fw>)';
-    protected $exit_pattern  = '</fw>';
+    protected $pattern = array(
+        1 => '<fw\b.*?>(?=.*?</fw>)',
+        4 => '</fw>',
+    );
 
 }
