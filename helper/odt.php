@@ -21,10 +21,9 @@ class helper_plugin_typography_odt extends DokuWiki_Plugin {
 
         switch ($state) {
             case DOKU_LEXER_ENTER:
-                // build css rule-set
+                // build inline css
                 $css = array();
-                unset($data['class']);
-                foreach ($data as $name => $value) {
+                foreach ($data['declarations'] as $name => $value) {
                     $css[] = $name.':'.$value.';';
                 }
                 $style = implode(' ', $css);
