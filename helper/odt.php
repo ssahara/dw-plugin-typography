@@ -12,8 +12,8 @@ class helper_plugin_typography_odt extends DokuWiki_Plugin {
 
     protected $closing_stack = NULL; // used in odt_render()
 
-    public function render(Doku_Renderer $renderer, $indata) {
-        list($state, $data) = $indata;
+    public function render(Doku_Renderer $renderer, $data) {
+        list($state, $tag_data) = $data;
 
         if (is_null($this->closing_stack)) {
             $this->closing_stack = new SplStack(); //require PHP 5 >= 5.3.0
@@ -23,7 +23,7 @@ class helper_plugin_typography_odt extends DokuWiki_Plugin {
             case DOKU_LEXER_ENTER:
                 // build inline css
                 $css = array();
-                foreach ($data['declarations'] as $name => $value) {
+                foreach ($tag_data['declarations'] as $name => $value) {
                     $css[] = $name.':'.$value.';';
                 }
                 $style = implode(' ', $css);

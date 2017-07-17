@@ -83,22 +83,22 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
     /*
      * Create output
      */
-    function render($format, Doku_Renderer $renderer, $indata) {
-        if (empty($indata)) return false;
+    function render($format, Doku_Renderer $renderer, $data) {
+        if (empty($data)) return false;
         switch ($format) {
             case 'xhtml':
-                return $this->render_xhtml($renderer, $indata);
+                return $this->render_xhtml($renderer, $data);
             case 'odt':
                 // ODT export;
                 $odt = $this->loadHelper('typography_odt');
-                return $odt->render($renderer, $indata);
+                return $odt->render($renderer, $data);
             default:
                 return false;
         }
     }
 
-    protected function render_xhtml(Doku_Renderer $renderer, $indata) {
-        list($state, $data) = $indata;
+    protected function render_xhtml(Doku_Renderer $renderer, $data) {
+        list($state, $tag_data) = $data;
         switch ($state) {
             case DOKU_LEXER_ENTER:
                 // load prameter parser utility
@@ -106,7 +106,7 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
                     $this->styler = $this->loadHelper('typography_parser');
                 }
                 // build attributes (style and class)
-                $renderer->doc .= '<span'.$this->styler->build_attributes($data).'>';
+                $renderer->doc .= '<span'.$this->styler->build_attributes($tag_data).'>';
                 break;
 
             case DOKU_LEXER_EXIT:
