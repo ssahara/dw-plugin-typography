@@ -10,11 +10,12 @@ if(!defined('DOKU_INC')) die();
 
 class helper_plugin_typography_parser extends DokuWiki_Plugin {
 
-    protected $props, $cond;
+    protected $properties, $specifications;
 
     function __construct() {
         // allowable parameters and relevant CSS properties
-        $this->props = array(
+        $this->properties = array(
+            'wf' => 'wf',           // exceptional class="wf-webfont"
             'ff' => 'font-family',
             'fc' => 'color',
             'bg' => 'background-color',
@@ -30,8 +31,9 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin {
               1  => 'text-transform',
         );
 
-        // allowable property pattern for parameters
-        $this->conds = array(
+        // valid patterns of css properties
+        $this->specifications = array(
+            'wf' => '/^[a-zA-Z_-]+$/',
             'ff' => '/^((\'[^,]+?\'|[^ ,]+?) *,? *)+$/',
             'fc' => '/(^\#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$)|'
                    .'(^rgb\((\d{1,3}%?,){2}\d{1,3}%?\)$)|'
@@ -66,8 +68,8 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin {
      *
      * @return  array
      */
-    function getAllowedProps() {
-        return $this->props;
+    function getAllowedProperties() {
+        return $this->properties;
     }
 
     /**
@@ -76,8 +78,8 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin {
      * @param array $props  allowable CSS property name
      * @return  bool
      */
-    function setAllowedProps(array $props) {
-        $this->props = $props;
+    function setAllowedProperties(array $properties) {
+        $this->properties = $properties;
         return true;
     }
 
@@ -88,7 +90,7 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin {
      * @return  bool  true if defined
      */
     function is_short_property($name) {
-        return isset($this->props[$name]);
+        return isset($this->properties[$name]);
     }
 
     /**
@@ -96,46 +98,63 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin {
      *
      * @param   string $style  style attribute of an element
      * @param   bool $filter   allow only CSS properties defined in $this->props
-     * @return  array  an associative array containing CSS property-value pairs
+     * @return  array  an associative array holds 'declarations' and 'classes'
      */
     function parse_inlineCSS($style, $filter=true) {
-        $declarations = array();
-        if (empty($style)) return $declarations;
+
+        if (empty($style)) return array();
+
+        $elem = array(
+          //'tag'          => 'span',
+            'declarations' => array(), // css property:value pairs of style attribute
+            'classes'      => array(), // splitted class attribute
+        );
 
         $tokens = explode(';', $style);
 
         foreach ($tokens as $declaration) {
-            $property = array_map('trim', explode(':', $declaration, 2));
-            if (!isset($property[1])) continue;
+            $item = array_map('trim', explode(':', $declaration, 2));
+            if (!isset($item[1])) continue;
 
             // check CSS property name
-            if (isset($this->props[$property[0]])) {
-                $name = $this->props[$property[0]];
-            } elseif (in_array($property[0], $this->props)) {
-                $name = $property[0];
+            if (isset($this->properties[$item[0]])) {
+                $name = $this->properties[$item[0]];
+            } elseif (in_array($item[0], $this->properties)) {
+                $name = $item[0];
             } elseif ($filter === false) {
-                $name = $property[0];  // assume as CSS property
+                $name = $item[0];  // assume as CSS property
             } else {
-                continue;              // ignore unknown property
+                continue;          // ignore unknown property
             }
 
             // check CSS property value
-            if (isset($this->conds[$name])) {
-                if (preg_match($this->conds[$name], $property[1], $matches)) {
-                    $value = $property[1];
+            if (isset($this->specifications[$name])) {
+                if (preg_match($this->specifications[$name], $item[1], $matches)) {
+                    $value = $item[1];
                 } else {
-                    continue;
+                    continue; // ignore invalid property value
                 }
                 if (($name == 'font-variant') && ($value == 'smallcaps')) {
                     $value = 'small-caps';
                 }
             } else {
-                $value = htmlspecialchars($property[1], ENT_COMPAT, 'UTF-8');
+                $value = htmlspecialchars($item[1], ENT_COMPAT, 'UTF-8');
             }
-            //$declarations[$name] = $value;
-            $declarations += array($name => $value);
+
+            if ($name == 'wf') {
+                // webfont : wf: webfont_class_without_prefix;
+                $elem['classes'] += array('webfont' => 'wf-'.$value);
+            } else {
+                // declaration : CSS property-value pairs
+                $elem['declarations'] += array($name => $value);
+            }
         }
-        return $declarations;
+
+        // unset empty attributes of an element
+        foreach (array_keys($elem) as $key) {
+           if (empty($elem[$key])) unset($elem[$key]);
+        }
+        return $elem;
     }
 
     /**
@@ -150,6 +169,39 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin {
             $css[] = $name.':'.$value.';';
         }
         return implode(' ', $css);
+    }
+
+    /**
+     * build style and class attribute of an element
+     *
+     * @param   array $elem  holds 'declarations' and 'classes'
+     * @param   array $addClasses  class items to be added
+     * @return  string  attributes of an element
+     */
+    function build_attributes(array $elem, array $addClasses=array()) {
+        $attr = $css = $item = array();
+
+        if (isset($elem['declarations'])) {
+            foreach ($elem['declarations'] as $name => $value) {
+                $css[] = $name.':'.$value.';';
+            }
+            $attr['style'] = implode(' ', $css);
+        }
+
+        if (!empty($addClasses)) {
+            $elem['classes'] = isset($elem['classes']) ?: array();
+            $elem['classes'] = array_unique($elem['classes'] + $addClasses);
+        }
+
+        if (isset($elem['classes'])) {
+            $attr['class'] = implode(' ', $elem['classes']);
+        }
+
+        foreach ($attr as $key => $value) {
+            $item[] = $key.'="'.$value.'"';
+        }
+        $out = empty($item) ? '' : ' '.implode(' ', $item);
+        return $out;
     }
 
 }

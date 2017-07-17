@@ -13,9 +13,7 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
     /**
      * register the event handlers
      */
-    public function register(Doku_Event_Handler $controller) {
-        $controller->register_hook('DOKUWIKI_STARTED', 'BEFORE', $this, 'deleteObsoletedSingleClass');
-
+    function register(Doku_Event_Handler $controller) {
         if (plugin_isdisabled('fontcolor')) {
             $controller->register_hook('TOOLBAR_DEFINE', 'AFTER', $this, 'fontColorToolbar', array());
         }
@@ -27,20 +25,12 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
         }
     }
 
-    /**
-     * Delete syntax.php which is obsoleted since multi-components syntax structure
-     */
-    public function deleteObsoletedSingleClass(Doku_Event $event) {
-        $legacyFile = dirname(__FILE__).'/syntax.php';
-        if (file_exists($legacyFile)) { unlink($legacyFile); }
-    }
-
 
     /**
      * Adds FontColor toolbar button
      * @see https://www.dokuwiki.org/plugin:fontcolor
      */
-    public function fontColorToolbar(Doku_Event $event, $param) {
+    function fontColorToolbar(Doku_Event $event, $param) {
         $title_note = '';
         $colors = array(
                 'Yellow' => '#ffff00',
@@ -96,7 +86,7 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
      * Adds FontFamily toolbar button
      * @see https://www.dokuwiki.org/plugin:fontcfamily
      */
-    public function fontFamilyToolbar(Doku_Event $event, $param) {
+    function fontFamilyToolbar(Doku_Event $event, $param) {
         $options = array(
             'serif'       => 'serif',
             'sans-serif'  => 'sans-serif',
@@ -126,7 +116,7 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
      * Adds FontSize toolbar button
      * @see https://www.dokuwiki.org/plugin:fontsize2
      */
-    public function fontSizeToolbar(Doku_Event $event, $param) {
+    function fontSizeToolbar(Doku_Event $event, $param) {
         $options = array(
             'xxs'     => 'xx-small',
             'xs'      =>  'x-small',
