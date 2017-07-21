@@ -26,9 +26,8 @@ class helper_plugin_typography_wrap extends DokuWiki_Plugin {
         'darkTpl'           => 0,
     );
 
-    protected $noPrefix = array();
-    protected $noPrefixPtn = '';   // '/^(?:tabs|group|wf-.*)$/'
-    protected $restrictedClasses = array();
+    protected $noPrefix = '';   // '/^(?:tabs|group|wf-.*)$/'
+    protected $restrictedClasses = '';
 
     function __construct() {
         // retrieve settings of WRAP plugin
@@ -39,20 +38,24 @@ class helper_plugin_typography_wrap extends DokuWiki_Plugin {
             $this->config['darkTpl']           = $wrap->getConf('darkTpl');
         }
 
-        // class names that should be excluded from being prefixed with "wrap_"
-        // each item may contain wildcard (*, ?)
+        // noPrefix: comma separated class names that should be excluded from
+        //   being prefixed with "wrap_",
+        //   each item may contain wildcard (*, ?)
         $search  = ['?', '*' ];
         $replace = ['.', '.*'];
-        $items = str_replace($search, $replace, $this->config['noPrefix']);
-        $this->noPrefix = array_map('trim', explode(',', $items));
-        $this->noPrefixPtn = '/^(?:'. implode('|', $this->noPrefix) .')$/';
+        if ($this->config['noPrefix']) {
+            $csv = str_replace($search, $replace, $this->config['noPrefix']);
+            $items = array_map('trim', explode(',', $csv));
+            $this->noPrefix = '/^(?:'. implode('|', $items) .')$/';
+        }
 
-        // restrict usage of plugin to these classes (comma separated)
-        // restriction type 
-        //   0: exclude restricted classes,
-        //   1: include restricted classes and exclude all others
+        // restrictedClasses : comma separated class names that should be checked
+        //   based on restriction type (white or black list)
+        //   each item may contain wildcard (*, ?)
         if ($this->config['restrictedClasses']) {
-            $this->restrictedClasses = array_map('trim', explode(',', $this->config['restrictedClasses']));
+            $csv = str_replace($search, $replace, $this->config['restrictedClasses']);
+            $items = array_map('trim', explode(',', $csv));
+            $this->restrictedClasses = '/^(?:'. implode('|', $items) .')$/';
         }
     }
 
@@ -64,7 +67,7 @@ class helper_plugin_typography_wrap extends DokuWiki_Plugin {
      * @return string
      */
     private function prefixhood($className) {
-        $prefix = preg_match($this->noPrefixPtn, $className) ? '' : 'wrap_';
+        $prefix = preg_match($this->noPrefix, $className) ? '' : 'wrap_';
         return $prefix.$className;
     }
 
@@ -122,7 +125,7 @@ class helper_plugin_typography_wrap extends DokuWiki_Plugin {
             //   0: exclude restricted classes,
             //   1: include restricted classes and exclude all others
             if ($this->restrictedClasses) {
-                $classIsInList = in_array($token, $this->restrictedClasses);
+                $classIsInList = preg_match($this->restrictedClasses, $tokene);
                 if ($this->config['restrictionType'] xor $classIsInList) continue;
                     // 1 xor 1 = false  allow
                     // 1 xor 0 = true   not allow
