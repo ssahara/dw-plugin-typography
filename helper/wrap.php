@@ -125,7 +125,7 @@ class helper_plugin_typography_wrap extends DokuWiki_Plugin {
             //   0: exclude restricted classes,
             //   1: include restricted classes and exclude all others
             if ($this->restrictedClasses) {
-                $classIsInList = preg_match($this->restrictedClasses, $tokene);
+                $classIsInList = preg_match($this->restrictedClasses, $token);
                 if ($this->config['restrictionType'] xor $classIsInList) continue;
                     // 1 xor 1 = false  allow
                     // 1 xor 0 = true   not allow
