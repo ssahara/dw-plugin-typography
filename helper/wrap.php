@@ -38,25 +38,23 @@ class helper_plugin_typography_wrap extends DokuWiki_Plugin {
             $this->config['darkTpl']           = $wrap->getConf('darkTpl');
         }
 
+        // convert inclusive comma separated OR items to regex pattern
+        $pattern = function ($csv) {
+            return '/^(?:'. str_replace(['?','*',' ',','],
+                                        ['.','.*','','|'], $csv) .')$/';
+        };
+
         // noPrefix: comma separated class names that should be excluded from
         //   being prefixed with "wrap_",
         //   each item may contain wildcard (*, ?)
-        $search  = ['?', '*' ];
-        $replace = ['.', '.*'];
-        if ($this->config['noPrefix']) {
-            $csv = str_replace($search, $replace, $this->config['noPrefix']);
-            $items = array_map('trim', explode(',', $csv));
-            $this->noPrefix = '/^(?:'. implode('|', $items) .')$/';
-        }
+        $this->noPrefix = ($this->config['noPrefix']) ?
+                $pattern($this->config['noPrefix']) : '';
 
         // restrictedClasses : comma separated class names that should be checked
         //   based on restriction type (white or black list)
         //   each item may contain wildcard (*, ?)
-        if ($this->config['restrictedClasses']) {
-            $csv = str_replace($search, $replace, $this->config['restrictedClasses']);
-            $items = array_map('trim', explode(',', $csv));
-            $this->restrictedClasses = '/^(?:'. implode('|', $items) .')$/';
-        }
+        $this->restrictedClasses = ($this->config['restrictedClasses']) ?
+                $pattern($this->config['restrictedClasses']) : '';
     }
 
 
