@@ -59,18 +59,6 @@ class helper_plugin_typography_wrap extends DokuWiki_Plugin {
 
 
     /**
-     * adjust wrap_ class name
-     *
-     * @param string $className
-     * @return string
-     */
-    private function prefixhood($className) {
-        $prefix = preg_match($this->noPrefix, $className) ? '' : 'wrap_';
-        return $prefix.$className;
-    }
-
-
-    /**
      * get attributes (pull apart the string between '<wrap' and '>')
      *  and identify classes, width, lang and dir
      *
@@ -132,7 +120,7 @@ class helper_plugin_typography_wrap extends DokuWiki_Plugin {
             }
 
             // prefix ajustment of class name
-            $classes[] = $this->prefixhood($token);
+            $classes[] = (preg_match($this->noPrefix, $token) ? '' : 'wrap_').$token;
 
         } // end of switch
 
