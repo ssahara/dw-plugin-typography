@@ -29,6 +29,7 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin {
             'sp' => 'white-space',
               0  => 'text-shadow',
               1  => 'text-transform',
+              2  => 'writing-mode',
         );
 
         // valid patterns of css properties

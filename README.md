@@ -23,6 +23,7 @@ Some specific **short name** are also available as markup tag; `<ff>` (font fami
 |  `va`  | vertical-align    | sets the vertical alignment |
 |  -     | text-transform  | controls capitalization of text (capitalize, uppercase or lowercase) |
 |  -     | text-shadow      | adds shadow to text |
+|  -     | writing-mode     | text alignment so that it can be read from top to bottom or from left to right |
 |  `wf`  | (web-font)   | specify a web font class which prefixed "wf-" (not css property) |
 
 Sometimes, inline styles are necessary when you are building a page by hand. You should however avoid them whenever possible for "semantic markup", better maintainability, and reusability. The [wrap plugin](https://www.dokuwiki.org/plugin:wrap) will provide most powerful and flexible method for specifying a class attribute.
