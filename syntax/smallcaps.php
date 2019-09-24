@@ -21,7 +21,8 @@ class syntax_plugin_typography_smallcaps extends syntax_plugin_typography_base
     /*
      * Handle the match
      */
-    function handle($match, $state, $pos, Doku_Handler $handler) {
+    public function handle($match, $state, $pos, Doku_Handler $handler)
+    {
         switch($state) {
             case DOKU_LEXER_ENTER:
                 // load prameter parser utility

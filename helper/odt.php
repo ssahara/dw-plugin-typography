@@ -6,13 +6,14 @@
  * @author     Lars (LarsDW223)
  */
 
-if(!defined('DOKU_INC')) die();
+if (!defined('DOKU_INC')) die();
 
-class helper_plugin_typography_odt extends DokuWiki_Plugin {
-
+class helper_plugin_typography_odt extends DokuWiki_Plugin
+{
     protected $closing_stack = NULL; // used in odt_render()
 
-    public function render(Doku_Renderer $renderer, $data) {
+    public function render(Doku_Renderer $renderer, $data)
+    {
         list($state, $tag_data) = $data;
 
         if (is_null($this->closing_stack)) {

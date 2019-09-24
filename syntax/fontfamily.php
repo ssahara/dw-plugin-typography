@@ -19,12 +19,15 @@ class syntax_plugin_typography_fontfamily extends syntax_plugin_typography_base
     );
 
     // Connect pattern to lexer
-    function connectTo($mode) {
+    public function connectTo($mode)
+    {
         if (plugin_isdisabled('fontfamily')) {
             $this->Lexer->addEntryPattern($this->pattern[1], $mode, $this->mode);
         }
     }
-    function postConnect() {
+
+    public function postConnect()
+    {
         if (plugin_isdisabled('fontfamily')) {
             $this->Lexer->addExitPattern($this->pattern[4], $this->mode);
         }

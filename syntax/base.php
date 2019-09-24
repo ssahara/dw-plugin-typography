@@ -20,13 +20,14 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin
     protected $mode;
     protected $styler = null;
 
-    function getType() { return 'formatting'; }
-    function getSort() { return 67; } // = Doku_Parser_Mode_formatting:strong -3
-    function getAllowedTypes() {
+    public function getType() { return 'formatting'; }
+    public function getSort() { return 67; } // = Doku_Parser_Mode_formatting:strong -3
+    public function getAllowedTypes() {
         return array('formatting', 'substition', 'disabled');
     }
     // plugin accepts its own entry syntax
-    function accepts($mode) {
+    public function accepts($mode)
+    {
         if ($mode == $this->mode) return true;
         return parent::accepts($mode);
     }
@@ -34,21 +35,27 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin
     /**
      * Connect pattern to lexer
      */
-    function preConnect() {
+    public function preConnect()
+    {
         // drop 'syntax_' from class name
         $this->mode = substr(get_class($this), 7);
     }
-    function connectTo($mode) {
+
+    public function connectTo($mode)
+    {
         $this->Lexer->addEntryPattern($this->pattern[1], $mode, $this->mode);
     }
-    function postConnect() {
+
+    public function postConnect()
+    {
         $this->Lexer->addExitPattern($this->pattern[4], $this->mode);
     }
 
     /*
      * Handle the match
      */
-    function handle($match, $state, $pos, Doku_Handler $handler) {
+    public function handle($match, $state, $pos, Doku_Handler $handler)
+    {
         switch($state) {
             case DOKU_LEXER_ENTER:
                 // load prameter parser utility
@@ -83,7 +90,8 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin
     /*
      * Create output
      */
-    function render($format, Doku_Renderer $renderer, $data) {
+    public function render($format, Doku_Renderer $renderer, $data)
+    {
         if (empty($data)) return false;
         switch ($format) {
             case 'xhtml':
@@ -97,7 +105,8 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin
         }
     }
 
-    protected function render_xhtml(Doku_Renderer $renderer, $data) {
+    protected function render_xhtml(Doku_Renderer $renderer, $data)
+    {
         list($state, $tag_data) = $data;
         switch ($state) {
             case DOKU_LEXER_ENTER:

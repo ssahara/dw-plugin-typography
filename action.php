@@ -6,14 +6,15 @@
  * @author     Satoshi Sahara <sahara.satoshi@gmail.com>
  */
 
-if(!defined('DOKU_INC')) die();
+if (!defined('DOKU_INC')) die();
 
-class action_plugin_typography extends DokuWiki_Action_Plugin {
-
+class action_plugin_typography extends DokuWiki_Action_Plugin
+{
     /**
      * register the event handlers
      */
-    function register(Doku_Event_Handler $controller) {
+    public function register(Doku_Event_Handler $controller)
+    {
         if (plugin_isdisabled('fontcolor')) {
             $controller->register_hook('TOOLBAR_DEFINE', 'AFTER', $this, 'fontColorToolbar', array());
         }
@@ -30,7 +31,8 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
      * Adds FontColor toolbar button
      * @see https://www.dokuwiki.org/plugin:fontcolor
      */
-    function fontColorToolbar(Doku_Event $event, $param) {
+    public function fontColorToolbar(Doku_Event $event, $param)
+    {
         $title_note = '';
         $colors = array(
                 'Yellow' => '#ffff00',
@@ -86,7 +88,8 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
      * Adds FontFamily toolbar button
      * @see https://www.dokuwiki.org/plugin:fontcfamily
      */
-    function fontFamilyToolbar(Doku_Event $event, $param) {
+    public function fontFamilyToolbar(Doku_Event $event, $param)
+    {
         $options = array(
             'serif'       => 'serif',
             'sans-serif'  => 'sans-serif',
@@ -116,7 +119,8 @@ class action_plugin_typography extends DokuWiki_Action_Plugin {
      * Adds FontSize toolbar button
      * @see https://www.dokuwiki.org/plugin:fontsize2
      */
-    function fontSizeToolbar(Doku_Event $event, $param) {
+    public function fontSizeToolbar(Doku_Event $event, $param)
+    {
         $options = array(
             'xxs'     => 'xx-small',
             'xs'      =>  'x-small',

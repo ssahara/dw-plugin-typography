@@ -6,10 +6,10 @@
  * @author Satoshi Sahara <sahara.satoshi@gmail.com>
  */
 // must be run within Dokuwiki
-if(!defined('DOKU_INC')) die();
+if (!defined('DOKU_INC')) die();
 
-class helper_plugin_typography_parser extends DokuWiki_Plugin {
-
+class helper_plugin_typography_parser extends DokuWiki_Plugin
+{
     protected $properties, $specifications;
 
     function __construct() {
@@ -68,7 +68,8 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin {
      *
      * @return  array
      */
-    function getAllowedProperties() {
+    public function getAllowedProperties()
+    {
         return $this->properties;
     }
 
@@ -78,7 +79,8 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin {
      * @param array $props  allowable CSS property name
      * @return  bool
      */
-    function setAllowedProperties(array $properties) {
+    public function setAllowedProperties(array $properties)
+    {
         $this->properties = $properties;
         return true;
     }
@@ -89,7 +91,8 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin {
      * @param   string $name  short name of CSS property
      * @return  bool  true if defined
      */
-    function is_short_property($name) {
+    public function is_short_property($name)
+    {
         return isset($this->properties[$name]);
     }
 
@@ -100,8 +103,8 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin {
      * @param   bool $filter   allow only CSS properties defined in $this->props
      * @return  array  an associative array holds 'declarations' and 'classes'
      */
-    function parse_inlineCSS($style, $filter=true) {
-
+    public function parse_inlineCSS($style, $filter=true)
+    {
         if (empty($style)) return array();
 
         $elem = array(
@@ -163,7 +166,8 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin {
      * @param   array $declarations  CSS property-value pairs
      * @return  string  inline CSS for style attribute
      */
-    function build_inlineCSS(array $declarations) {
+    public function build_inlineCSS(array $declarations)
+    {
         $css = array();
         foreach ($declarations as $name => $value) {
             $css[] = $name.':'.$value.';';
@@ -178,7 +182,8 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin {
      * @param   array $addClasses  class items to be added
      * @return  string  attributes of an element
      */
-    function build_attributes(array $elem, array $addClasses=array()) {
+    public function build_attributes(array $elem, array $addClasses=array())
+    {
         $attr = $css = $item = array();
 
         if (isset($elem['declarations'])) {
