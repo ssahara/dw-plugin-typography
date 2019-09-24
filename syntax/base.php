@@ -75,14 +75,14 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin
                 // get css property:value pairs as an associative array
                 $tag_data = $this->styler->parse_inlineCSS($params);
 
-                return array($state, $tag_data);
+                return $data = array($state, $tag_data);
 
             case DOKU_LEXER_UNMATCHED:
-                $handler->_addCall('cdata', array($match), $pos);
+                $handler->base($match, $state, $pos);
                 return false;
 
             case DOKU_LEXER_EXIT:
-                return array($state, '');
+                return $data = array($state, '');
         }
         return array();
     }
