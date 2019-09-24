@@ -8,10 +8,10 @@
  */
 
 // must be run within Dokuwiki
-if(!defined('DOKU_INC')) die();
+if (!defined('DOKU_INC')) die();
 
-class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
-
+class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin
+{
     protected $pattern = array(
         1 => '<typo\b.*?>(?=.*?</typo>)',
         4 => '</typo>',
@@ -19,10 +19,6 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
 
     protected $mode;
     protected $styler = null;
-
-    function __construct() {
-        $this->mode = substr(get_class($this), 7); // drop 'syntax_' from class name
-    }
 
     function getType() { return 'formatting'; }
     function getSort() { return 67; } // = Doku_Parser_Mode_formatting:strong -3
@@ -38,6 +34,10 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin {
     /**
      * Connect pattern to lexer
      */
+    function preConnect() {
+        // drop 'syntax_' from class name
+        $this->mode = substr(get_class($this), 7);
+    }
     function connectTo($mode) {
         $this->Lexer->addEntryPattern($this->pattern[1], $mode, $this->mode);
     }

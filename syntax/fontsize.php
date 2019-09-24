@@ -11,8 +11,8 @@
 
 require_once(dirname(__FILE__).'/base.php');
 
-class syntax_plugin_typography_fontsize extends syntax_plugin_typography_base {
-
+class syntax_plugin_typography_fontsize extends syntax_plugin_typography_base
+{
     protected $pattern = array(
         1 => '<fs\b.*?>(?=.*?</fs>)',
         4 => '</fs>',

@@ -11,8 +11,8 @@
 
 require_once(dirname(__FILE__).'/base.php');
 
-class syntax_plugin_typography_fontfamily extends syntax_plugin_typography_base {
-
+class syntax_plugin_typography_fontfamily extends syntax_plugin_typography_base
+{
     protected $pattern = array(
         1 => '<ff\b.*?>(?=.*?</ff>)',
         4 => '</ff>',
