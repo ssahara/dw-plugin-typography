@@ -20,11 +20,21 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin
     protected $mode;
     protected $styler = null;
 
-    public function getType() { return 'formatting'; }
-    public function getSort() { return 67; } // = Doku_Parser_Mode_formatting:strong -3
-    public function getAllowedTypes() {
+    public function getType()
+    {   // Syntax Type
+        return 'formatting';
+    }
+
+    public function getSort()
+    {   // sort number used to determine priority of this mode
+        return 67; // = Doku_Parser_Mode_formatting:strong -3
+    }
+
+    public function getAllowedTypes()
+    {   // Allowed Mode Types
         return array('formatting', 'substition', 'disabled');
     }
+
     // plugin accepts its own entry syntax
     public function accepts($mode)
     {
