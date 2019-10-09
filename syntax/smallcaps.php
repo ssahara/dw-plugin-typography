@@ -11,10 +11,18 @@ require_once(dirname(__FILE__).'/base.php');
 
 class syntax_plugin_typography_smallcaps extends syntax_plugin_typography_base
 {
-    protected $pattern = array(
-        1 => '<smallcaps\b.*?>(?=.*?</smallcaps>)',
-        4 => '</smallcaps>',
-    );
+    /**
+     * Connect pattern to lexer
+     */
+    public function preConnect()
+    {
+        // drop 'syntax_' from class name
+        $this->mode = substr(get_class($this), 7);
+
+        // syntax pattern
+        $this->pattern[1] = '<smallcaps\b.*?>(?=.*?</smallcaps>)';
+        $this->pattern[4] = '</smallcaps>';
+    }
 
     //protected $styler = null;
 
