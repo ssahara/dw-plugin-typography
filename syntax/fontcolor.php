@@ -13,12 +13,19 @@ require_once(dirname(__FILE__).'/base.php');
 
 class syntax_plugin_typography_fontcolor extends syntax_plugin_typography_base
 {
-    protected $pattern = array(
-        1 => '<fc\b.*?>(?=.*?</fc>)',
-        4 => '</fc>',
-    );
+    /**
+     * Connect pattern to lexer
+     */
+    public function preConnect()
+    {
+        // drop 'syntax_' from class name
+        $this->mode = substr(get_class($this), 7);
 
-    // Connect pattern to lexer
+        // syntax pattern
+        $this->pattern[1] = '<fc\b.*?>(?=.*?</fc>)';
+        $this->pattern[4] = '</fc>';
+    }
+
     public function connectTo($mode)
     {
         if (plugin_isdisabled('fontcolor')) {

@@ -13,12 +13,19 @@ require_once(dirname(__FILE__).'/base.php');
 
 class syntax_plugin_typography_fontfamily extends syntax_plugin_typography_base
 {
-    protected $pattern = array(
-        1 => '<ff\b.*?>(?=.*?</ff>)',
-        4 => '</ff>',
-    );
+    /**
+     * Connect pattern to lexer
+     */
+    public function preConnect()
+    {
+        // drop 'syntax_' from class name
+        $this->mode = substr(get_class($this), 7);
 
-    // Connect pattern to lexer
+        // syntax pattern
+        $this->pattern[1] = '<ff\b.*?>(?=.*?</ff>)';
+        $this->pattern[4] = '</ff>';
+    }
+
     public function connectTo($mode)
     {
         if (plugin_isdisabled('fontfamily')) {

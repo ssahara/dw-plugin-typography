@@ -12,22 +12,9 @@ if (!defined('DOKU_INC')) die();
 
 class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin
 {
-    protected $pattern = array(
-        1 => '<typo\b.*?>(?=.*?</typo>)',
-        4 => '</typo>',
-    );
-
-    protected $mode;
-    protected $styler = null;
-
     public function getType()
     {   // Syntax Type
         return 'formatting';
-    }
-
-    public function getSort()
-    {   // sort number used to determine priority of this mode
-        return 67; // = Doku_Parser_Mode_formatting:strong -3
     }
 
     public function getAllowedTypes()
@@ -35,20 +22,19 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin
         return array('formatting', 'substition', 'disabled');
     }
 
-    // plugin accepts its own entry syntax
-    public function accepts($mode)
-    {
-        if ($mode == $this->mode) return true;
-        return parent::accepts($mode);
-    }
-
     /**
      * Connect pattern to lexer
      */
+    protected $mode, $pattern;
+
     public function preConnect()
     {
         // drop 'syntax_' from class name
         $this->mode = substr(get_class($this), 7);
+
+        // syntax pattern
+        $this->pattern[1] = '<typo\b.*?>(?=.*?</typo>)';
+        $this->pattern[4] = '</typo>';
     }
 
     public function connectTo($mode)
@@ -60,6 +46,25 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin
     {
         $this->Lexer->addExitPattern($this->pattern[4], $this->mode);
     }
+
+    public function getSort()
+    {   // sort number used to determine priority of this mode
+        return 67; // = Doku_Parser_Mode_formatting:strong -3
+    }
+
+    // plugin accepts its own entry syntax
+    public function accepts($mode)
+    {
+        if ($mode == $this->mode) return true;
+        return parent::accepts($mode);
+    }
+
+
+    /**
+     * Plugin features
+     */
+    protected $styler = null;
+
 
     /*
      * Handle the match
