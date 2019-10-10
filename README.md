@@ -2,11 +2,12 @@ DokuWiki plugin Typography
 =============================
 Extended version from original [Typography plugin](http://treecode.pl/typography.html) developed by Paweł Piekarski.
 
-Typography plugin extends DokuWiki markup by typesetting abilities. The `<typo>` markup tag specifies CSS font properties such as font face, size, weight, and color of text.
+Typography plugin extends DokuWiki markup by typesetting abilities. 
+The `<typo>` markup tag specifies CSS font properties such as font face, size, weight, and color of text. 
 The parameter consists of CSS property-value pairs (`property: value;`), each pair must be separated by semicolon (`;`) however last one may be omitted. You can use abbreviated **short name** instead of full property name.
 
-Some specific **short name** are also available as markup tag; `<ff>` (font familiy/name), `<fc>` (color), `<fs>` (size), `<fw>` (weight). First three of them are compatible with [fontfamily](https://www.dokuwiki.org/plugin:fontfamily), [fontcolor](https://www.dokuwiki.org/plugin:fontcolor), and [fontsize2](https://www.dokuwiki.org/plugin:fontsize2) plugins respectively. These short syntax are available through toolbar icons: ![fontcolor icon](https://raw.githubusercontent.com/ssahara/dw-plugin-typography/master/images/fontcolor/picker.png) ![fontfamily icon](https://raw.githubusercontent.com/ssahara/dw-plugin-typography/master/images/fontfamily/picker.png) ![font-size icon](https://raw.githubusercontent.com/ssahara/dw-plugin-typography/master/images/fontsize/picker.png).
-
+Some specific **short name** are also available as markup tag; `<ff>` (font familiy/name), `<fs>` (size), `<fc>` (color), `<bg>` (background-color), `<fw>` (weight).  First three of them are compatible with [fontfamily](https://www.dokuwiki.org/plugin:fontfamily), [fontsize2](https://www.dokuwiki.org/plugin:fontsize2), and [fontcolor](https://www.dokuwiki.org/plugin:fontcolor) plugins respectively. 
+These short syntax are available through toolbar icons: ![fontfamily icon](https://raw.githubusercontent.com/ssahara/dw-plugin-typography/master/images/fontfamily/picker.png) ![font-size icon](https://raw.githubusercontent.com/ssahara/dw-plugin-typography/master/images/fontsize/picker.png) ![fontcolor icon](https://raw.githubusercontent.com/ssahara/dw-plugin-typography/master/images/fontcolor/picker.png)
 
 | short name | css property name | description |
 |:--         |:--                |:--          |
