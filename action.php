@@ -35,6 +35,7 @@ class action_plugin_typography extends DokuWiki_Action_Plugin
     {
         $title_note = '';
         $colors = array(
+                'White' => '#ffffff',
                 'Yellow' => '#ffff00',
                 'Red' => '#ff0000',
                 'Orange' => '#ffa500',
