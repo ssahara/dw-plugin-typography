@@ -6,10 +6,6 @@
  * @author     Paweł Piekarski <qentinson@gmail.com>
  * @author     Satoshi Sahara <sahara.satoshi@gmail.com>
  */
-
-// must be run within Dokuwiki
-if (!defined('DOKU_INC')) die();
-
 class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin
 {
     public function getType()
