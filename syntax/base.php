@@ -15,7 +15,7 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin
 
     public function getAllowedTypes()
     {   // Allowed Mode Types
-        return array('formatting', 'substition', 'disabled');
+        return ['formatting', 'substition', 'disabled'];
     }
 
     /**
@@ -26,7 +26,7 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin
     public function preConnect()
     {
         // drop 'syntax_' from class name
-        $this->mode = substr(get_class($this), 7);
+        $this->mode = substr(static::class, 7);
 
         // syntax pattern
         $this->pattern[1] = '<typo\b.*?>(?=.*?</typo>)';
@@ -75,10 +75,10 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin
                 }
 
                 // identify markup keyword of this syntax class
-                $markup = substr($this->pattern[4], 2, -1);
+                $markup = substr((string) $this->pattern[4], 2, -1);
 
                 // get inline CSS parameter
-                $params = strtolower(ltrim(substr($match, strlen($markup)+1, -1)));
+                $params = strtolower(ltrim(substr((string) $match, strlen($markup)+1, -1)));
                 if ($this->styler->is_short_property($markup)) {
                     $params = $markup.(($params[0] == ':') ? '' : ':').$params;
                 }
@@ -86,16 +86,16 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin
                 // get css property:value pairs as an associative array
                 $tag_data = $this->styler->parse_inlineCSS($params);
 
-                return $data = array($state, $tag_data);
+                return $data = [$state, $tag_data];
 
             case DOKU_LEXER_UNMATCHED:
                 $handler->base($match, $state, $pos);
                 return false;
 
             case DOKU_LEXER_EXIT:
-                return $data = array($state, '');
+                return $data = [$state, ''];
         }
-        return array();
+        return [];
     }
 
     /*
@@ -118,7 +118,7 @@ class syntax_plugin_typography_base extends DokuWiki_Syntax_Plugin
 
     protected function render_xhtml(Doku_Renderer $renderer, $data)
     {
-        list($state, $tag_data) = $data;
+        [$state, $tag_data] = $data;
         switch ($state) {
             case DOKU_LEXER_ENTER:
                 // load prameter parser utility

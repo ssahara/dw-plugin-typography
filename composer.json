@@ -1,0 +1,20 @@
+{
+  "name": "vendor_name/dw-plugin-typography",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "mmi",
+      "email": "email@example.com"
+    }
+  ],
+  "require-dev": {
+    "rector/rector": "^1.2"
+  },
+  "config": {
+    "platform": {
+      "php": "8.2.0"
+    }
+  }
+}

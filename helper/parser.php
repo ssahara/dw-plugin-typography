@@ -14,8 +14,9 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin
 
     function __construct() {
         // allowable parameters and relevant CSS properties
-        $this->properties = array(
-            'wf' => 'wf',           // exceptional class="wf-webfont"
+        $this->properties = [
+            'wf' => 'wf',
+            // exceptional class="wf-webfont"
             'ff' => 'font-family',
             'fc' => 'color',
             'bg' => 'background-color',
@@ -27,40 +28,27 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin
             'ws' => 'word-spacing',
             'va' => 'vertical-align',
             'sp' => 'white-space',
-              0  => 'text-shadow',
-              1  => 'text-transform',
-        );
+            0  => 'text-shadow',
+            1  => 'text-transform',
+        ];
 
         // valid patterns of css properties
-        $this->specifications = array(
-            'wf' => '/^[a-zA-Z_-]+$/',
-            'ff' => '/^((\'[^,]+?\'|[^ ,]+?) *,? *)+$/',
-            'fc' => '/(^\#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$)|'
-                   .'(^rgb\((\d{1,3}%?,){2}\d{1,3}%?\)$)|'
-                   .'(^[a-zA-Z]+$)/',
-            'bg' => '/(^\#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$)|'
-                   .'(^rgb\((\d{1,3}%?,){2}\d{1,3}%?\)$)|'
-                   .'(^rgba\((\d{1,3}%?,){3}[\d.]+\)$)|'
-                   .'(^[a-zA-Z]+$)/',
-            'font-size' =>
-                 '/^(?:\d+(?:\.\d+)?(?:px|em|ex|pt|%)'
-                .'|(?:x{1,2}-)?small|medium|(?:x{1,2}-)?large|smaller|larger)$/',
-            'font-weight' =>
-                 '/^(?:\d00|normal|bold|bolder|lighter)$/',
-            'font-variant' =>
-                 '/^(?:normal|small-?caps)$/',
-            'line-height' =>
-                 '/^\d+(?:\.\d+)?(?:px|em|ex|pt|%)?$/',
-            'letter-spacing' =>
-                 '/^-?\d+(?:\.\d+)?(?:px|em|ex|pt|%)$/',
-            'word-spacing' =>
-                 '/^-?\d+(?:\.\d+)?(?:px|em|ex|pt|%)$/',
-            'vertical-align' =>
-                 '/^-?\d+(?:\.\d+)?(?:px|em|ex|pt|%)$|'
-                .'^(?:baseline|sub|super|top|text-top|middle|bottom|text-bottom|inherit)$/',
-            'white-space' =>
-                 '/^(?:normal|nowrap|pre|pre-line|pre-wrap)$/',
-        );
+        $this->specifications = ['wf' => '/^[a-zA-Z_-]+$/', 'ff' => '/^((\'[^,]+?\'|[^ ,]+?) *,? *)+$/', 'fc' => '/(^\#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$)|'
+               .'(^rgb\((\d{1,3}%?,){2}\d{1,3}%?\)$)|'
+               .'(^[a-zA-Z]+$)/', 'bg' => '/(^\#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$)|'
+               .'(^rgb\((\d{1,3}%?,){2}\d{1,3}%?\)$)|'
+               .'(^rgba\((\d{1,3}%?,){3}[\d.]+\)$)|'
+               .'(^[a-zA-Z]+$)/', 'font-size' =>
+             '/^(?:\d+(?:\.\d+)?(?:px|em|ex|pt|%)'
+            .'|(?:x{1,2}-)?small|medium|(?:x{1,2}-)?large|smaller|larger)$/', 'font-weight' =>
+             '/^(?:\d00|normal|bold|bolder|lighter)$/', 'font-variant' =>
+             '/^(?:normal|small-?caps)$/', 'line-height' =>
+             '/^\d+(?:\.\d+)?(?:px|em|ex|pt|%)?$/', 'letter-spacing' =>
+             '/^-?\d+(?:\.\d+)?(?:px|em|ex|pt|%)$/', 'word-spacing' =>
+             '/^-?\d+(?:\.\d+)?(?:px|em|ex|pt|%)$/', 'vertical-align' =>
+             '/^-?\d+(?:\.\d+)?(?:px|em|ex|pt|%)$|'
+            .'^(?:baseline|sub|super|top|text-top|middle|bottom|text-bottom|inherit)$/', 'white-space' =>
+             '/^(?:normal|nowrap|pre|pre-line|pre-wrap)$/'];
     }
 
     /**
@@ -105,13 +93,14 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin
      */
     public function parse_inlineCSS($style, $filter=true)
     {
-        if (empty($style)) return array();
+        if (empty($style)) return [];
 
-        $elem = array(
-          //'tag'          => 'span',
-            'declarations' => array(), // css property:value pairs of style attribute
-            'classes'      => array(), // splitted class attribute
-        );
+        $elem = [
+            //'tag'          => 'span',
+            'declarations' => [],
+            // css property:value pairs of style attribute
+            'classes'      => [],
+        ];
 
         $tokens = explode(';', $style);
 
@@ -146,10 +135,10 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin
 
             if ($name == 'wf') {
                 // webfont : wf: webfont_class_without_prefix;
-                $elem['classes'] += array('webfont' => 'wf-'.$value);
+                $elem['classes'] += ['webfont' => 'wf-'.$value];
             } else {
                 // declaration : CSS property-value pairs
-                $elem['declarations'] += array($name => $value);
+                $elem['declarations'] += [$name => $value];
             }
         }
 
@@ -168,7 +157,7 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin
      */
     public function build_inlineCSS(array $declarations)
     {
-        $css = array();
+        $css = [];
         foreach ($declarations as $name => $value) {
             $css[] = $name.':'.$value.';';
         }
@@ -182,9 +171,9 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin
      * @param   array $addClasses  class items to be added
      * @return  string  attributes of an element
      */
-    public function build_attributes(array $elem, array $addClasses=array())
+    public function build_attributes(array $elem, array $addClasses=[])
     {
-        $attr = $css = $item = array();
+        $attr = $css = $item = [];
 
         if (isset($elem['declarations'])) {
             foreach ($elem['declarations'] as $name => $value) {
@@ -194,7 +183,7 @@ class helper_plugin_typography_parser extends DokuWiki_Plugin
         }
 
         if (!empty($addClasses)) {
-            $elem['classes'] = isset($elem['classes']) ?: array();
+            $elem['classes'] = isset($elem['classes']) ?: [];
             $elem['classes'] = array_unique($elem['classes'] + $addClasses);
         }
 
